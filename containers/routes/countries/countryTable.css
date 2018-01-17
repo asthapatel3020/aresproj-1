@@ -1,0 +1,31 @@
+.table-country {
+	width:70%;
+	border-spacing: 0 10px;
+	border-collapse: unset;
+}
+
+.table-thead::after {
+	content:'';
+	display: block;	
+	height: 10px;
+}
+.td-btn {
+	text-align: right;
+}
+.add-country-form {
+	width: 70%;
+}
+.form-group1 {
+	display: flex;
+	justify-content: center;
+	vertical-align: middle;
+	/*font-family:'sans-serif';*/
+}
+.table-city {
+	width:40%;
+	border-spacing: 0 10px;
+	border-collapse: unset;
+}
+.wrapper {
+	padding:0 5% 5% 5%;
+}
