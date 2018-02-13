@@ -33,7 +33,7 @@ export default ({...props}) => {
 			                    <tr key={i} style={{borderBottom:'1px solid #dadada'}}>
 			                        <td>{item.name}</td>
 			                        <td className="td-btn">
-              							<Link to={`/countries/edit/${item.name}&${item.phone}&${item.id}`}>
+              							<Link to={`/cities/edit/${item.name}&${item.country.id}&${item.id}`}>
               								<Button 
               									// onClick={()=>props.dispatch(actions.chooseEditCountry(item.name, item.phone))} 
               									label="Изменить" 

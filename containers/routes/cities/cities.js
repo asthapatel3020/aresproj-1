@@ -23,7 +23,6 @@ class Cities extends Component {
 	state={countryId:''}
 
 	componentWillMount() {
-		console.log("mounted")
 		this.props.userAccess==1&&this.props.dispatch(actions.getCountries(this.props.token, this.props.id))
 		this.props.dispatch(actions.getCities(this.props.token, this.props.id, this.props.userCountry.id))
 		
@@ -35,22 +34,21 @@ class Cities extends Component {
 
   	}
 	render() {
-		console.log(this.props, "CITIES")
 		const {cities} = this.props.cities;
 		// let cities = [];
 		return (
-			<div>
+			<div className="route-wrapper">
 			<div style={{display:'flex', justifyContent:'flex-end', padding:'0 3%'}}>
 			<Link to="/cities/add">
-				<Button label="Добавить новый город" size="btn-xs" color="btn-default" style={{color:'#ffc333'}}  />
+				<Button label="+ Добавить новый город" size="btn-xs" color="btn-default" style={{color:'#ffc333'}}  />
         	</Link>
 			
 		</div>
-			<div style={{display:'flex', padding:'0 0 5% 5%', lineHeight:'2.5em'}}>
+			{this.props.userAccess==1&&<div style={{display:'flex', padding:'0 0 5% 5%', lineHeight:'2.5em'}}>
 				<div style={{marginRight:'5px'}}>Выберите страну</div> 
 
 				<ItemSelect defaultValue={this.props.userCountry.id} style={{width:'200px'}} onSelect={(e)=>this.handleNameChange(e)} items={this.props.countries.countries}/>
-			</div>
+			</div>}
 			{<CityTable countryName={this.props.countryName} dispatch={this.props.dispatch} cities={cities}/>}
 			</div>
 

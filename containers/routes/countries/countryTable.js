@@ -21,9 +21,9 @@ import {Button} from '../../../components/ui';
 // }
 export default ({...props}) => {
 	return<div className="wrapper"> 
-		<div style={{display:'flex', justifyContent:'flex-end', padding:'0 10%'}}>
+		<div style={{display:'flex', justifyContent:'flex-end', padding:'0 0 15px 0'}}>
 			<Link to="/countries/add">
-				<Button label="Добавить новую страну" size="btn-xs" color="btn-default" style={{color:'#ffc333'}}  />
+				<Button label="+ Добавить новую страну" size="btn-xs" color="btn-default" style={{color:'#ffc333'}}  />
         	</Link>
 			
 		</div>

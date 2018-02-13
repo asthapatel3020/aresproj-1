@@ -1,5 +1,6 @@
 const initialState = {
-	users:[]
+	users:[],
+	meta:''
 };
 const normaliseItems=(data)=> {
 
@@ -13,7 +14,7 @@ export default function app(state = initialState, action) {
 	switch (action.type) {
 		case "GET_USERS":
 			// console.log("got countries", action.res.data);
-			return Object.assign({}, state, {users:normaliseItems(action.res.data.data)});
+			return Object.assign({}, state, {users:normaliseItems(action.res.data.data.users), meta:action.res.data.data.meta});
 	default:
     	return state;
 	}

@@ -18,7 +18,7 @@ import './countryTable.css';
 import {Button} from '../../../components/ui'
 				// 
 class AddCountry extends Component {
-	state={countryName:'', phone:''}
+	state={countryName:'', phone:'', success:false}
 
 	handleNameChange(e) {
     	this.setState({ countryName: e.target.value });
@@ -34,24 +34,27 @@ class AddCountry extends Component {
   	}
   	componentWillReceiveProps(nextProps) {
   		nextProps.isSent&&this.props.router.push('/countries');
-  		console.log(nextProps.isSent)
+  	}
+  	componentDidMount() {
+  		this.props.isSent&&this.props.dispatch(actions.clearState())
   	}
 	render() {
-		console.log("addcountry",this.props)
 		// const {countries} = this.props.countries;
 		return (
-			<div style={{display:'flex', alignItems:'center', padding:'30px 30px 60px 30px', borderBoxing:'border-box', flexDirection:'column'}}>
+			<div 
+			
+				className="route-wrapper"
+				style={{display:'flex', alignItems:'center', padding:'30px 30px 60px 30px', borderBoxing:'border-box', flexDirection:'column'}}>
 				<div className="add-country-form" >
 					<div className="form-group form-group1">
-		              <label className="col-lg-3" style={{lineHeight:'2.5em'}}>Имя</label>
-		              <Input placeholder="Беларусь"  value={this.state.countryName} onFieldChange={(e)=>this.handleNameChange(e)}/>
+		              <label  style={{lineHeight:'2.5em', width:'20%'}}>Имя</label>
+		              <Input required format={"noNumbers"} errorMessage={"Название должно состоять из букв кириллицы"} isFull placeholder="Введите название страны"  value={this.state.countryName} onFieldChange={(e)=>this.handleNameChange(e)}/>
 		            </div>
 		            <div className="form-group form-group1">
-		              <label className="col-lg-3" style={{lineHeight:'2.5em'}}>Контактный телефон</label>
-		              <Input placeholder="+375(17) 227-46-74" value={this.state.phone} onFieldChange={(e)=>this.handlePhoneChange(e)} />
+		              <label  style={{lineHeight:'2.5em', width:'20%'}}>Контактный телефон</label>
+		              <Input required format={"numbers"} errorMessage={"Телефон должен состоять из цифр, +,(), -"} isFull placeholder="(XXX)XXX-XX-XX" value={this.state.phone} onFieldChange={(e)=>this.handlePhoneChange(e)} />
 		            </div>
-		            <div style={{width:'100%', display:'flex', justifyContent:'space-between', marginTop:'25px'}}>
-		            	<Button onClick={(e)=>this.props.router.push('/countries')} label="Назад" style={{textAlign:'right'}} size="btn-sm" color="btn-warning"   /> 
+		            <div style={{width:'100%', display:'flex', justifyContent:'flex-end', marginTop:'25px'}}>
 
 		            	<Button onClick={(e)=>this.handleSave(e)} label="Сохранить" style={{textAlign:'right'}} size="btn-sm" color="btn-warning"   /> 
 		            	

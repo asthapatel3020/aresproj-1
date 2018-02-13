@@ -1,5 +1,6 @@
 const initialState = {
-	retailers:[]
+	retailers:[],
+	meta:''
 };
 const normaliseItems=(data)=> {
 
@@ -12,8 +13,8 @@ const normaliseItems=(data)=> {
 export default function app(state = initialState, action) {
 	switch (action.type) {
 		case "GET_RETAILERS":
-			// console.log("got countries", action.res.data);
-			return Object.assign({}, state, {retailers:normaliseItems(action.res.data.data)});
+			// console.log("got countries", action.res.data.data);
+			return Object.assign({}, state, {retailers:normaliseItems(action.res.data.data.retails), meta:action.res.data.data.meta});
 	default:
     	return state;
 	}

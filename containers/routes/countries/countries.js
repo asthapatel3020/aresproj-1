@@ -37,7 +37,7 @@ class Countries extends Component {
 	render() {
 		const {countries} = this.props.countries;
 		return (
-			<div>
+			<div className="route-wrapper">
 			{<CountryTable countryName={this.props.countryName} dispatch={this.props.dispatch} countries={countries}/>}
 			</div>
 

@@ -26,20 +26,31 @@ export default class Header extends Component {
   handleOnScreen() {
       $("#nav").toggleClass('nav-off-screen');
   }
-
+  
 	render() {
     const {route} = this.props;
+    let breadCrumbs=[], currPath;
+    if (route.path) {
+    const routes =route.pageDescription.split("/")
+    
+    routes.forEach((item, i)=> breadCrumbs[i]={name:item, url:i==0?"/"+route.path.split("/")[1]:"/"+route.path.split("/")[1]+"/"+route.path.split("/")[2]})
+    currPath = route.path.match(":")?route.path.split(":")[0].slice(0,-1):route.path;
+    }
 	  return (
       <div className="lock-header subheader m-b-lg"> 
         <div className="container full"> 
           <div className="m-b-lg"> 
-            <div className="pull-left w50 m-t-xs">
-              <h3 className="m-b-none">{route.pageName}</h3> 
-              <small className="text-muted">{route.pageDescription}</small> 
-            </div>
-            <div className="pull-right w50 text-right m-t-lg">
-              <ul style={{verticalAlign: 'top',marginTop: -8,marginLeft: 10}} className="nav navbar-nav navbar-right  nav-user">
-                <Profile onLogout={this.props.onLogout} profile={this.props.user} />
+            {route.path&&<div className="pull-left w50 breads m-t-xs">
+              {breadCrumbs.map((item, i)=>
+                <span 
+                  onClick={()=>this.props.router.push(item.url)} 
+                  key={i} 
+                  className={currPath==item.url?"current-route":""}
+                >{item.name} / </span>)}
+            </div>}
+            <div className="pull-right w50 text-right">
+              <ul style={{verticalAlign: 'top',marginLeft: 10}} className="nav navbar-nav navbar-right  nav-user">
+                <Profile router={this.props.router} onLogout={this.props.onLogout} profile={this.props.user} />
               </ul>
             </div>
           </div> 

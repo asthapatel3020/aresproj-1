@@ -19,7 +19,8 @@ class Input extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      valid: true
+      valid: true,
+      errorMessage:''
     };
   }
 
@@ -40,10 +41,11 @@ class Input extends Component {
     let val = e.currentTarget.value;
     if (this.props.required) {
       if (isEmpty(val)) {
-        this.setState({ valid: false });
+        
+        this.setState({ valid: false, errorMessage:'Поле должно быть заполнено' });
         return;
       }
-      this.setState({ valid: this.validateFormat(this.props.format, val) });
+      this.setState({ valid: this.validateFormat(this.props.format, val), errorMessage:this.props.errorMessage });
     } else {
       this.setState({ valid: this.validateFormat(this.props.format, val) });
     }
@@ -57,28 +59,35 @@ class Input extends Component {
     switch (format) {
       case "email":
         return validations.isEmail("", val);
+      case "noNumbers":
+        return validations.isAlpha("", val);
+      case "numbers":
+        return validations.isNumeric("", val)  
+      case "login":
+        return validations.isLogin(val, val)
+      case "password":
+        return validations.isPassword(val, val)
       default:
         return true;
     }
   }
 
   render() {
+    // console.log("input")
     let icon = this.props.icon ? <i className={this.props.icon} /> : null;
     let format = this.props.format;
-
-    let error = this.state.valid ? null : <p className="help-block text-left">{errorMessage}</p>;
-
-    let { errorMessage = "required", onFieldChange, classes, rounded, ...rest } = this.props;
-
+    let error = this.state.valid ? null : <p className="help-block text-left" style={{color:'red'}}>{this.state.errorMessage}</p>;
+    // let myError = this.props.isLogin
+    let { errorMessage, onFieldChange, classes, rounded, isFull, isValid, ...rest } = this.props;
+    // console.log("isvalid", isValid)
     return (
-      <div className={`${classes}`} style={{width:'80%'}}>
+      <div className={`${classes}`} style={{width:!isFull?'100%':'100%'}}>
         <div className={`${this.props.icon ? "iconic-input" : ""}`}>
           {icon}
           <input
-
-            type={format}
+            // type={format}
             autoComplete="off"
-            className={`form-control ${rounded ? "rounded" : ""} col-lg-9`}
+            className={`form-control ${rounded ? "rounded" : ""} col-lg-9 ${!this.state.valid?'invalid-input':''}`}
             onChange={e => this.handleChange(e)}
             {...rest}
           />
@@ -139,13 +148,19 @@ var validations = {
     if (typeof value === "number") {
       return true;
     }
-    return validations.matchRegexp(values, value, /^[-+]?(?:\d*[.])?\d+$/);
+    return validations.matchRegexp(values, value, /^[0-9+()-]+$/i);
   },
   isAlpha: function(values, value) {
-    return validations.matchRegexp(values, value, /^[A-Z]+$/i);
+    return validations.matchRegexp(values, value, /^[А-Я ]+$/i);
   },
   isAlphanumeric: function(values, value) {
     return validations.matchRegexp(values, value, /^[0-9A-Z]+$/i);
+  },
+  isLogin: function(values, value) {
+    return validations.matchRegexp(values, value, /^[0-9A-Z._-]+$/i);
+  },
+  isPassword: function(values, value) {
+    return validations.matchRegexp(values, value, /[^А-Я ]+$/i);
   },
   isInt: function(values, value) {
     return validations.matchRegexp(values, value, /^(?:[-+]?(?:0|[1-9]\d*))$/);
@@ -187,7 +202,8 @@ Input.propTypes = {
   onFieldChange: PropTypes.func,
   required: PropTypes.bool,
   classes: PropTypes.string,
-  rounded: PropTypes.bool
+  rounded: PropTypes.bool,
+  // isValid: PropTypes.bool
 };
 
 Input.defaultProps = {

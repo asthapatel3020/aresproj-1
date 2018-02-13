@@ -1,9 +1,12 @@
 .table-country {
-	width:70%;
-	border-spacing: 0 10px;
-	border-collapse: unset;
+	/*width:70%;*/
+	border-spacing: 10px 10px;
+	/*border-collapse: unset;*/
+	border-bottom:2px solid #eee;
 }
-
+.table-country td {
+	padding:15px 8px;
+}
 .table-thead::after {
 	content:'';
 	display: block;	
@@ -28,4 +31,16 @@
 }
 .wrapper {
 	padding:0 5% 5% 5%;
+}
+.table-country tbody tr td:first-child {
+	padding-left:0;
+}
+.table-country tbody tr td:last-child {
+	padding-right:0;
+}
+.table-thead tr th {
+	padding: 0 8px;
+}
+.table-thead tr th:first-child {
+	padding-left:0;
 }

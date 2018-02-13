@@ -2,6 +2,7 @@ const initialState = {
 	retailerName:'',
 	addSuccess:false,
 	editSuccess:false,
+	deleteSuccess:false,
 	errors:[]
 };
 const normaliseItems=(data)=> {
@@ -22,6 +23,12 @@ export default function app(state = initialState, action) {
 			return {...initialState, editSuccess:true}
 		case "EDIT_RETAILER_FAILURE":
 			return {...state, editSuccess:false, errors:normaliseItems(action.error.data.errors)}
+		case "DELETE_RETAILER":
+			return {...initialState, deleteSuccess:true}
+		case "DELETE_RETAILER_FAILURE":
+			return {...state, deleteSuccess:false, errors:normaliseItems(action.error.data.errors)}
+		case "CLEAR":
+			return initialState;
 	default:
     	return state;
 	}

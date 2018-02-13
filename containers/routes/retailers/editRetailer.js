@@ -30,25 +30,41 @@ class AddCountry extends Component {
   		// this.props.onLogin(this.state.email, this.state.password);
       this.props.dispatch(actions.editRetailer(this.props.token, this.props.id, this.state.retailerName, this.state.retailerId)); 
   	}
+  	handleDelete(e) {
+      this.props.dispatch(actions.deleteRetailer(this.props.token, this.props.id, this.state.retailerId)); 
+
+  	}
   	componentWillReceiveProps(nextProps) {
   		nextProps.isSent&&this.props.router.push('/retailers');
-  		console.log("ISSENT", nextProps.isSent)
+  		nextProps.isDeleted&&this.props.router.push('/retailers');
+
+  	}
+  	componentDidMount() {
+  		this.props.isSent&&this.props.dispatch(actions.clearState())
+  		this.props.isDeleted&&this.props.dispatch(actions.clearState())
+
   	}
 	render() {
 		console.log("eddddddit RETAILER",this.props)
 		// const {countries} = this.props.countries;
 		return (
-			<div style={{display:'flex', alignItems:'center', padding:'30px 30px 60px 30px', borderBoxing:'border-box', flexDirection:'column'}}>
+			<div 
+				className="route-wrapper"
+				style={{display:'flex', alignItems:'center', padding:'30px 30px 60px 30px', borderBoxing:'border-box', flexDirection:'column'}}>
 				<div className="add-country-form" >
 					<div className="form-group form-group1">
-		              <label className="col-lg-3" style={{lineHeight:'2.5em'}}>Имя</label>
-		              <Input placeholder="Sulpak"  value={this.state.retailerName} onFieldChange={(e)=>this.handleNameChange(e)}/>
+		              <label className="col-lg-2 c-col" style={{lineHeight:'2.5em'}}>Имя</label>
+		              <Input required placeholder="Введите имя розничной сети"  value={this.state.retailerName} onFieldChange={(e)=>this.handleNameChange(e)}/>
 		            </div>
 		       
-		            <div style={{width:'100%', display:'flex', justifyContent:'space-between', marginTop:'25px'}}>
-		            	<Button onClick={(e)=>this.props.router.push('/retailers')} label="Назад" style={{textAlign:'right'}} size="btn-sm" color="btn-warning"   /> 
+		            <div style={{width:'100%', display:'flex', justifyContent:'flex-end', marginTop:'25px'}}>
 
 		            	<Button onClick={(e)=>this.handleSave(e)} label="Сохранить" style={{textAlign:'right'}} size="btn-sm" color="btn-warning"   /> 
+		            	
+		            </div>
+		            <div style={{width:'100%', display:'flex', justifyContent:'flex-end', marginTop:'25px'}}>
+
+		            	<Button onClick={(e)=>this.handleDelete(e)} label="- Удалить розничную сеть" style={{textAlign:'right', color:'red'}} size="btn-sm" color="btn-default"   /> 
 		            	
 		            </div>
 				</div>
@@ -67,7 +83,8 @@ function mapStateToProps(state) {
     token:state.app.token,
     id:state.app.id,
     isSent: state.retailer.editSuccess,
-    errors: state.retailer.errors
+    errors: state.retailer.errors,
+    isDeleted: state.retailer.deleteSuccess
 
   };
 }

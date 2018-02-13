@@ -10,11 +10,12 @@
 
 import React, { Component } from "react";
 import { Link } from "react-router";
+import { connect } from "react-redux";
 
 import MenuItem from "../components/widgets/MenuItem";
 var shallowCompare = require("react-addons-shallow-compare");
-
-export default class Menu extends Component {
+// import Logo from '../dist/images/logo.jpg'
+class Menu extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -38,13 +39,15 @@ export default class Menu extends Component {
       // classes += " nav-xs";
       navClasses += " hidden-xs";
     }
-
+    
     const { apps, schema, blocks, selectedAppIndex } = this.props;
 
     return (
       <aside className={classes} id="nav">
         <section className="vbox">
-          <header className="header bg-warn brand-header lock-header pos-stat clearfix">
+          <header className="header bg-warn brand-header lock-header pos-stat clearfix logoheader" >
+            <Link to={"/"} >
+            </Link>
             <a
               className="btn btn-link visible-xs"
               onClick={() => this.toggleShowHide()}
@@ -70,14 +73,14 @@ export default class Menu extends Component {
                 <nav className={navClasses}>
                   <ul className="menu-nav">
                     <MenuItem
-                      link={"/"}
+                      link={"/reports"}
                       icon="fa-home"
                       color="bg-danger"
                       linkText="Отчеты"
                       currentPage={this.props.currentPage}
                     />
                      <MenuItem
-                      link={"/"}
+                      link={"/question_reports"}
                       icon="fa-home"
                       color="bg-danger"
                       linkText="Отчет по вопросам"
@@ -85,14 +88,14 @@ export default class Menu extends Component {
                     />
 
                     <MenuItem
-                      link={"/"}
+                      link={"/comment_reports"}
                       icon="fa-home"
                       color="bg-danger"
                       linkText="Отчет по комментариям"
                       currentPage={this.props.currentPage}
                     />
                     <MenuItem
-                      link={"/"}
+                      link={""}
                       icon="fa-home"
                       color="bg-danger"
                       linkText="Аудиты"
@@ -106,7 +109,7 @@ export default class Menu extends Component {
                       currentPage={this.props.currentPage}
                     />
                     <MenuItem
-                      link={"/"}
+                      link={"/downloadmatrix"}
                       icon="fa-home"
                       color="bg-danger"
                       linkText="Выгрузка таблицы"
@@ -121,13 +124,13 @@ export default class Menu extends Component {
                     />
                     <div className="menu-title">Настройка магазинов</div>
 
-                    <MenuItem
+                    {this.props.userAccess==1&&<MenuItem
                       link={"/countries"}
                       icon="fa-home"
                       color="bg-danger"
                       linkText="Страны"
                       currentPage={this.props.currentPage}
-                    />
+                    />}
                     <MenuItem
                       link={"/cities"}
                       icon="fa-home"
@@ -143,7 +146,7 @@ export default class Menu extends Component {
                       currentPage={this.props.currentPage}
                     />
                     <MenuItem
-                      link={"/"}
+                      link={"/shops"}
                       icon="fa-home"
                       color="bg-danger"
                       linkText="Магазины"
@@ -151,17 +154,17 @@ export default class Menu extends Component {
                     />
                     <div className="menu-title">Настройка анкет</div>
                     <MenuItem
-                      link={"/"}
+                      link={"/questionswh"}
                       icon="fa-home"
                       color="bg-danger"
                       linkText="Вопросы(Whirlpool)"
                       currentPage={this.props.currentPage}
                     />
                     <MenuItem
-                      link={"/"}
+                      link={"/questionsother"}
                       icon="fa-home"
                       color="bg-danger"
-                      linkText="Вопросы(другие)"
+                      linkText="Вопросы(Другие)"
                       currentPage={this.props.currentPage}
                     />
                   </ul>
@@ -176,6 +179,8 @@ export default class Menu extends Component {
     );
   }
 }
+
+
 
 class SubMenuItem extends Component {
   render() {
@@ -193,3 +198,10 @@ class SubMenuItem extends Component {
     );
   }
 }
+function mapStateToProps(state) {
+  return {
+    userAccess:state.app.userAccess
+
+  };
+}
+export default connect(mapStateToProps)(Menu);

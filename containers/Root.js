@@ -16,54 +16,10 @@ import { syncHistoryWithStore, routerReducer } from "react-router-redux";
 import configureStore from "../store/configureStore";
 
 import Landing from "./Landing";
+import Signup from "./Signup";
 
 import App from "./App";
-import Account from "./Account";
-import Settings from "./Settings";
-import Signup from "./Signup";
-import Profile from "./Profile";
 
-import Dashboard from "./Dashboard";
-import Analytics from "./Analytics";
-
-// UI
-import Bootstrap from "./Bootstrap";
-import Buttons from "./Buttons";
-import FontAwesome from "./FontAwesome";
-import MaterialIcons from "./MaterialIcons";
-import Tables from "./Tables";
-import Modals from "./Modals";
-
-// charts
-
-import Charts from "./Charts";
-
-// components
-
-import Components from "./Components";
-import Widgets from "./Widgets";
-
-// apps
-
-import Maps from "./Maps";
-import Boards from "./Boards";
-import Notes from "./Notes";
-import Note from "./Note";
-import Pins from "./Pins";
-import Email from "./Email";
-
-// forms
-
-import Forms from "./Forms";
-
-// docs
-
-import Docs from "./Docs";
-
-// data
-
-import DataForms from "./DataForms";
-import DataGrid from "./DataGrid";
 
 // routes
 // import Users from './routes/users/users';
@@ -72,12 +28,28 @@ import AddCountry from './routes/countries/addCountry';
 import EditCountry from './routes/countries/editCountry';
 import Cities from './routes/cities/cities';
 import AddCity from './routes/cities/addCity';
+import EditCity from './routes/cities/editCity';
 import UploadMatrix from './routes/uploadMatrix/uploadMatrix';
 import Users from './routes/users/users';
 import AddUser from './routes/users/addUser';
 import Retailers from './routes/retailers/retailers';
 import AddRetailers from './routes/retailers/addRetailers';
 import EditRetailer from './routes/retailers/editRetailer';
+import Shops from './routes/shops/shops';
+import AddShop from './routes/shops/addShop';
+import QuestionsWh from './routes/questionsWh/questionsWh';
+import EditShop from './routes/shops/editShop';
+import Question from './routes/questionsWh/question';
+import QuestionsOther from './routes/questionsOther/questionsOther';
+import EditQuestionWh from './routes/questionsWh/editQuestion';
+import QuestionOther from './routes/questionsOther/question';
+import EditQuestionOther from './routes/questionsOther/editQuestion';
+import EditUser from './routes/users/editUser';
+import DownloadMatrix from './routes/downloadMatrix/downloadMatrix';
+import Reports from './routes/reports/reports';
+import QuestionReports from './routes/questionReports/questionReports';
+import QuestionDetails from './routes/questionReports/questionDetails';
+import CommentReports from './routes/commentReports/commentReports';
 
 
 
@@ -94,181 +66,59 @@ export default class Root extends Component {
   render() {
     return (
       <Provider store={store}>
-        <Router history={history}>
+        <Router onUpdate={() => window.scrollTo(0, 0)} history={history}>
           <Route path="/" component={App}>
             <IndexRoute
-              component={Dashboard}
-              pageName="Dashboard"
-              pageDescription="Admin Application Dashboard."
+              component={Reports}
+              pageName="reports"
+              pageDescription="Отчеты"
             />
 
-            <Route
-              path="/analytics"
-              component={Analytics}
-              pageName="Analytics"
-              pageDescription="Simple analytics example."
-            />
-
-            <Route
-              path="/account"
-              component={Account}
-              pageName="Account"
-              pageDescription="Manage your account."
-            />
-            <Route
-              path="/settings"
-              component={Settings}
-              pageName="Settings"
-              pageDescription="Application Settings."
-            />
+            
+            
             <Route path="/signup" component={Signup} pageName="" pageDescription="" />
-            <Route
-              path="/profile"
-              component={Profile}
-              pageName="Profile"
-              pageDescription="Manage your profile"
-            />
-            <Route
-              path="/charts"
-              component={Charts}
-              pageName="Charts"
-              pageDescription="Chartist Charts"
-            />
+            
 
-            <Route
-              path="/ui/general"
-              component={Bootstrap}
-              pageName="General"
-              pageDescription="Bootstrap 3"
-            />
-            <Route
-              path="/ui/buttons"
-              component={Buttons}
-              pageName="Buttons"
-              pageDescription="UI Buttons."
-            />
-            <Route
-              path="/ui/modals"
-              component={Modals}
-              pageName="Modals"
-              pageDescription="Modal dialogs"
-            />
-            <Route
-              path="/ui/fontawesome"
-              component={FontAwesome}
-              pageName="Fontawesome Icons"
-              pageDescription="React stateless component."
-            />
-            <Route
-              path="/ui/materialicons"
-              component={MaterialIcons}
-              pageName="Material Design Icons"
-              pageDescription="React stateless component."
-            />
-            <Route
-              path="/ui/tables"
-              component={Tables}
-              pageName="Tables"
-              pageDescription="Simple Tables"
-            />
-
-            <Route
-              path="/apps/email"
-              component={Email}
-              pageName="Email"
-              pageDescription="react powered email."
-            />
-            <Route
-              path="/apps/maps"
-              component={Maps}
-              pageName="Maps"
-              pageDescription="react powered google maps."
-            />
-            <Route
-              path="/apps/boards"
-              component={Boards}
-              pageName="Boards"
-              pageDescription="Boards page"
-            />
-            <Route path="/apps/boards/:id" component={Pins} pageName="Pins" pageDescription="" />
-            <Route
-              path="/apps/notes"
-              component={Notes}
-              pageName="Notes"
-              pageDescription="Notes page"
-            />
-            <Route
-              path="/apps/notes/:id"
-              component={Note}
-              pageName="Notes"
-              pageDescription="A simple notes app."
-            />
-
-            <Route
-              path="/forms"
-              component={Forms}
-              pageName="Forms"
-              pageDescription="Layout and Elements"
-            />
-            <Route path="/docs" component={Docs} pageName="Docs" pageDescription="Sample Docs" />
-            <Route
-              path="/components"
-              component={Components}
-              pageName="Components"
-              pageDescription="Custom React components."
-            />
-            <Route
-              path="/widgets"
-              component={Widgets}
-              pageName="Widgets"
-              pageDescription="React Admin Widgets"
-            />
-
-            <Route
-              path="/data/forms"
-              component={DataForms}
-              pageName="Data Forms"
-              pageDescription="Data driven forms."
-            />
-            <Route
-              path="/data/grid"
-              component={DataGrid}
-              pageName="Data Grid"
-              pageDescription="Data driven data grid."
-            />
+           
 
 
             <Route
                 path="/countries"
                 component={Countries}
                 pageName="Страны"
-                pageDescription="Информация о странах."
+                pageDescription="Страны"
               />
               <Route
                 path="/countries/add"
                 component={AddCountry}
                 pageName="Добавить страны"
-                pageDescription="Информация о странах."
+                pageDescription="Страны/Добавить страну"
               />
               <Route
                 path="/countries/edit/:name&:phone&:id"
                 component={EditCountry}
                 pageName="Изменить данные страны"
-                pageDescription="Изменение данных страны."
+                pageDescription="Страны/Страна"
               />
 
               <Route
                 path="/cities"
                 component={Cities}
                 pageName="Список городов"
-                pageDescription="Список городов"
+                pageDescription="Города"
               />
 
               <Route
                 path="/cities/add"
                 component={AddCity}
                 pageName="Добавить город"
-                pageDescription="Добавление нового города"
+                pageDescription="Города/Добавить город"
+              />
+              <Route
+                path="/cities/edit/:name&:countryid&:id"
+                component={EditCity}
+                pageName="Изменить город"
+                pageDescription="Города/Изменить город"
               />
               <Route
                 path="/uploadmatrix"
@@ -286,7 +136,13 @@ export default class Root extends Component {
                 path="/users/add"
                 component={AddUser}
                 pageName="Добавить пользователя"
-                pageDescription="Добавить пользователя"
+                pageDescription="Пользователи/Добавить пользователя"
+              />
+              <Route
+                path="/users/edit"
+                component={EditUser}
+                pageName="Добавить пользователя"
+                pageDescription="Пользователи/Изменить пользователя"
               />
               <Route
                 path="/retailers"
@@ -298,13 +154,99 @@ export default class Root extends Component {
                 path="/retailers/add"
                 component={AddRetailers}
                 pageName="Добавить розничную сеть"
-                pageDescription="Розничные сети"
+                pageDescription="Розничные сети/Добавить розничную сеть"
               />
               <Route
                 path="/retailers/edit/:id&&:name"
                 component={EditRetailer}
                 pageName="Изменить розничную сеть"
-                pageDescription="Розничные сети"
+                pageDescription="Розничные сети/Розничная сеть"
+              />
+
+              <Route
+                path="/shops"
+                component={Shops}
+                pageName="Магазины"
+                pageDescription={"Магазины"}
+              />
+              <Route
+                path="/shops/add"
+                component={AddShop}
+                pageName="Магазины"
+                pageDescription="Магазины/Добавить магазин"
+              />
+
+              <Route
+                path="/questionswh"
+                component={QuestionsWh}
+                pageName="Вопросы Whirlpool"
+                pageDescription="Вопросы(Whirlpool)"
+              />
+              <Route
+                path="/shops/edit/:shopId&:name&:address&:lat&:lng&:countryId&:cityId&:retailerId"
+                component={EditShop}
+                pageName="Изменить магазин"
+                pageDescription="Магазины/Магазин"
+              />
+               <Route
+                path="/questionswh/create_question"
+                component={Question}
+                pageName="Создать вопрос"
+                pageDescription="Вопросы(whirlpool)/Вопрос"
+              />
+              <Route
+                path="/questionsother"
+                component={QuestionsOther}
+                pageName="Создать вопрос"
+                pageDescription="Вопросы(Другие)/Вопрос"
+              />
+              <Route
+                path="/questionswh/edit"
+                component={EditQuestionWh}
+                pageName="Изменить вопрос"
+                pageDescription="Вопросы(Whirlpool)/Вопрос"
+              />
+              <Route
+                path="/questionsother/edit"
+                component={EditQuestionOther}
+                pageName="Изменить вопрос"
+                pageDescription="Вопросы(Другие)/Вопрос"
+              />
+              <Route
+                path="/questionsother/create_question"
+                component={QuestionOther}
+                pageName="Создать вопрос"
+                pageDescription="Вопросы(Другие)/Вопрос"
+              />
+              <Route
+                path="/downloadmatrix"
+                component={DownloadMatrix}
+                pageName="downloadmatrix"
+                pageDescription="Выгрузка таблицы"
+              />
+              <Route
+                path="/reports"
+                component={Reports}
+                pageName="reports"
+                pageDescription="Отчеты"
+              />
+              <Route
+                path="/question_reports"
+                component={QuestionReports}
+                pageName="questionReports"
+                pageDescription="Отчет по вопросам"
+              />
+              <Route
+                path="/question_reports/question_details/:id"
+                component={QuestionDetails}
+                pageName="questionReports"
+                pageDescription="Отчет по вопросам/Вопрос"
+              />
+              <Route
+                path="/comment_reports"
+                component={CommentReports}
+                pageName="commentReports"
+                pageDescription="Отчет по комментариям"
               />
             
           </Route>

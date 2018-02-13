@@ -1,12 +1,3 @@
-/**
- * Copyright 2015-present, Lights in the Sky (3273741 NS Ltd.)
- * All rights reserved.
- *
- * This source code is licensed under the license found in the
- * LICENSE file in the root directory of this source tree. 
- * 
- * @providesModule reducers
- */
 
 import { routerStateReducer } from 'redux-react-router';
 import { combineReducers } from 'redux';
@@ -19,7 +10,6 @@ import LocalReduxOutlet from '../outlets/LocalReduxOutlet';
 // custom reducers
 
 import app from './app';
-import user from './user';
 import countries from './reducers/countries';
 import country from './reducers/country';
 import loading from './reducers/loading';
@@ -28,27 +18,27 @@ import city from './reducers/city';
 import users from './reducers/users';
 import retailers from './reducers/retailers';
 import retailer from './reducers/retailer';
-
-// initial demo app state
-
-import initialState from './initialState';
-
-// outlets
-
-const boards = LocalReduxOutlet('board').makeReducer(initialState.boards);
-const pins = LocalReduxOutlet('pin').makeReducer(initialState.pins);
-const notes = LocalReduxOutlet('note').makeReducer(initialState.notes);
-const messages = LocalReduxOutlet('messages').makeReducer(initialState.messages);
-const emails = LocalReduxOutlet('emails').makeReducer(initialState.emails);
+import matrix from './reducers/matrix';
+import shops from './reducers/shops';
+import categories from './reducers/categories';
+import shop from './reducers/shop';
+import questions from './reducers/questions';
+import question from './reducers/question';
+import brands from './reducers/brands';
+import questionsOther from './reducers/questionsOther';
+import user from './reducers/user';
+import questionOther from './reducers/questionOther';
+import filters from './reducers/filters';
+import appliedFilters from './reducers/appliedFilters';
+import reports from './reducers/reports';
+import comments from './reducers/comments';
+import modal from './reducers/modal';
+import downloadMatrix from './reducers/downloadMatrix';
+import questionStats from './reducers/questionStats';
 
 export default {
 	router: routerStateReducer,
 	app,
-	boards,
-	pins,
-	notes,
-	messages,
-	emails,
 	user,
 	countries,
 	country,
@@ -57,5 +47,22 @@ export default {
 	city,
 	users,
 	retailers,
-	retailer
+	retailer,
+	matrix,
+	shops,
+	categories,
+	shop,
+	questions,
+	question,
+	brands,
+	questionsOther,
+	user,
+	questionOther,
+	filters,
+	appliedFilters,
+	reports,
+	comments,
+	modal,
+	downloadMatrix,
+	questionStats
 }

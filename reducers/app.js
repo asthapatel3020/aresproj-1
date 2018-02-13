@@ -1,19 +1,8 @@
-/**
- * Copyright 2015-present, Lights in the Sky (3273741 NS Ltd.)
- * All rights reserved.
- *
- * This source code is licensed under the license found in the
- * LICENSE file in the root directory of this source tree. 
- * 
- * @providesModule app
- */
 
 import Cookies from 'cookies-js';
 import Config from '../config';
 
-// import {
-//   USER_AUTH, USER_AUTH_REQUEST, USER_IS_AUTHENTICATED, USER_LOGOUT
-// } from '../actions';
+
 
 const initialState = {
 	loggedIn:false,
@@ -21,19 +10,21 @@ const initialState = {
 	token:'',
 	userAccess:'',
 	fullname:'',
-	country:{}
+	country:{}, 
+	username:'',
+	errors:[]
 };
 
-function setCookie(expires_in, token, id, access, fullname, country) {
+function setCookie(expires_in, token, id, access, fullname, country, username) {
 	var cookie_expiration_date = Date.now() + expires_in;
-	console.log
 	console.log("date expire", cookie_expiration_date)
 	Cookies.set("auth", JSON.stringify({	
 			token:token, 
 			userId:id, 
 			userAccess:access,
 			fullname: fullname,
-			userCountry:country }), 
+			userCountry:country,
+			username:username }), 
 	{ expires: 86400 });
 }
 
@@ -41,7 +32,6 @@ function checkCookie() {
 	// let map =
 	// let data = Cookies.get();
 	// data.forEach(elem=>map[elem.id]=elem)
-	console.log("checkedCookie",Cookies.get("auth")&&JSON.parse(Cookies.get("auth")));
 	return Cookies.get("auth")?true:false;
 }
 
@@ -53,7 +43,6 @@ function destroyCookie() {
 export default function app(state = initialState, action) {
 	switch (action.type) {
 		case "IS_AUTHENTICATED":
-			
 			// checkCookie();
 			return Object.assign(
 				{}, 
@@ -63,33 +52,35 @@ export default function app(state = initialState, action) {
 					id:Cookies.get("auth")?JSON.parse(Cookies.get("auth")).userId:'',
 					userAccess:Cookies.get("auth")?JSON.parse(Cookies.get("auth")).userAccess:'',
 					fullname:Cookies.get("auth")?JSON.parse(Cookies.get("auth")).fullname:'',
-					country:Cookies.get("auth")?JSON.parse(Cookies.get("auth")).userCountry:''
+					country:Cookies.get("auth")?JSON.parse(Cookies.get("auth")).userCountry:'',
+					username:Cookies.get("auth")?JSON.parse(Cookies.get("auth")).username:'',
 				}
 				);
 			
 		case "USER_AUTH_REQUEST":
 			return state;
+		case "USER_AUTH_FAILURE":
+			console.log("FAILURE")
+			return {...state, errors:action.error&&action.error.data.errors}
 		case "USER_AUTH":
-			console.log("action",action.res.data.data)
-			setCookie(
-				1, 
-				action.res.data.data.api_token, 
-				action.res.data.data.id,
-				action.res.data.data.access,
-				action.res.data.data.fullname,
-				action.res.data.data.country
-				);
 			
-			// return {
-			// 	...state,
-			// 	loggedIn:true,
-			// 	token:action.res.data.data.api_token,
-			// 	id: action.res.data.data.id
-			// 	// param:action.param
-			// }
-			return Object.assign({}, state, {loggedIn:true, token: action.res.data.data.api_token});
+			if (action.res.data.data.access!==3) {
+				setCookie(
+					1, 
+					action.res.data.data.api_token, 
+					action.res.data.data.id,
+					action.res.data.data.access,
+					action.res.data.data.fullname?action.res.data.data.fullname:'',
+					action.res.data.data.country,
+					action.res.data.data.username
+
+					)
+				return Object.assign({}, state, {loggedIn:true, token: action.res.data.data.api_token})
+			}
+			else {
+				return {...state, errors:[{message:'Нужно владеть правами администратора/супер администратора.'}]}
+			}
 		case "USER_LOGOUT":
-			console.log("logouted");
 			destroyCookie();
 			return Object.assign({}, initialState);
 	default:

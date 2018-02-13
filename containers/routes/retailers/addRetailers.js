@@ -17,7 +17,7 @@ import Input from '../../../components/ui/Input';
 import '../countries/countryTable.css';
 import {Button} from '../../../components/ui'
 				// 
-class AddCountry extends Component {
+class AddRetailer extends Component {
 	state={retailerName:'', }
 
 	handleNameChange(e) {
@@ -32,21 +32,23 @@ class AddCountry extends Component {
   	}
   	componentWillReceiveProps(nextProps) {
   		nextProps.isSent&&this.props.router.push('/retailers');
-  		console.log(nextProps.isSent)
+  	}
+  	componentDidMount() {
+  		this.props.isSent&&this.props.dispatch(actions.clearState())
   	}
 	render() {
-		console.log("addRETAILER",this.props)
 		// const {countries} = this.props.countries;
 		return (
-			<div style={{display:'flex', alignItems:'center', padding:'30px 30px 60px 30px', borderBoxing:'border-box', flexDirection:'column'}}>
+			<div 
+				className="route-wrapper"
+				style={{display:'flex', alignItems:'center', padding:'30px 30px 60px 30px', borderBoxing:'border-box', flexDirection:'column'}}>
 				<div className="add-country-form" >
 					<div className="form-group form-group1">
-		              <label className="col-lg-3" style={{lineHeight:'2.5em'}}>Имя</label>
-		              <Input placeholder="Sulpak"  value={this.state.retailerName} onFieldChange={(e)=>this.handleNameChange(e)}/>
+		              <label className="col-lg-2 c-col" style={{lineHeight:'2.5em'}}>Имя</label>
+		              <Input required placeholder="Введите имя розничной сети"  value={this.state.retailerName} onFieldChange={(e)=>this.handleNameChange(e)}/>
 		            </div>
 		       
-		            <div style={{width:'100%', display:'flex', justifyContent:'space-between', marginTop:'25px'}}>
-		            	<Button onClick={(e)=>this.props.router.push('/retailers')} label="Назад" style={{textAlign:'right'}} size="btn-sm" color="btn-warning"   /> 
+		            <div style={{width:'100%', display:'flex', justifyContent:'flex-end', marginTop:'25px'}}>
 
 		            	<Button onClick={(e)=>this.handleSave(e)} label="Сохранить" style={{textAlign:'right'}} size="btn-sm" color="btn-warning"   /> 
 		            	
@@ -71,4 +73,4 @@ function mapStateToProps(state) {
 
   };
 }
-export default connect(mapStateToProps)(AddCountry);
+export default connect(mapStateToProps)(AddRetailer);

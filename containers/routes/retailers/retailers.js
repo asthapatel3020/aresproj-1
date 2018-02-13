@@ -14,27 +14,56 @@ import * as actions from '../../../actions';
 import { connect } from "react-redux";
 import {Table} from '../../../components/ui';
 import ItemSelect from '../../../components/ui/itemSelect'
-import {Button} from '../../../components/ui';
+import {Button, Pager} from '../../../components/ui';
 import RetailerTable from './retailerTable';
 class Users extends Component {
 
-	state={countryId:''}
+	state={countryId:'', total:'', currentPage:1}
 
 	componentWillMount() {
-		console.log("mounted")
 		// this.props.userAccess==1&&this.props.dispatch(actions.getCountries(this.props.token, this.props.id))
-		this.props.dispatch(actions.getRetailers(this.props.token, this.props.id))
+		this.props.dispatch(actions.getRetailers(this.props.token, this.props.id, this.state.currentPage))
 		
 	}
+	componentDidUpdate(prevProps, prevState) {
+		// prevState.currentPage!==this.state.currentPage&&console.log("states", prevState.currentPage, this.state.currentPage)
+	}
+	componentWillReceiveProps(nextProps) {
+		this.setState({total:nextProps.retailers.meta.total_pages, currentPage: nextProps.retailers.meta.current_page})
+	}
+	handleChangePage=(e)=> {
+		this.setState({currentPage:e})
+		this.props.dispatch(actions.getRetailers(this.props.token, this.props.id, e))
+
+	}
+	handleNext=()=> {
+		this.setState({currentPage:this.state.currentPage+1})
+		this.props.dispatch(actions.getRetailers(this.props.token, this.props.id, this.state.currentPage+1))
+
+	}
+	handlePrevious=()=> {
+		this.setState({currentPage:this.state.currentPage-1})
+		this.props.dispatch(actions.getRetailers(this.props.token, this.props.id, this.state.currentPage-1))
+
+	}
 	render() {
-		console.log("retailers", this.props.retailers)
+		console.log("state", this.state.currentPage)
 		const {retailers} = this.props.retailers;
 		// let cities = [];
 		return (
-			<div>
+			<div className="route-wrapper">
 				{<RetailerTable dispatch={this.props.dispatch} retailers={retailers}/>}
-			
+				{this.state.total>1&&<Pager 
+					currentPage={this.state.currentPage} 
+					itemsPerPage={15}
+					pages={this.state.total}
+					onPage={e=>this.handleChangePage(e)}
+					onNext={this.handleNext}
+					onPrevious={this.handlePrevious}
+
+				/>}
 			</div>
+
 
 
 		);

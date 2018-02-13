@@ -15,51 +15,108 @@ import { connect } from "react-redux";
 import {Table} from '../../../components/ui';
 import Input from '../../../components/ui/Input';
 import {Button} from '../../../components/ui'
+import ItemSelect from '../shops/itemSelect'
+import ShopTable from './shopTable'
+
 				// 
 class AddUser extends Component {
-	state={countryName:'', phone:''}
+	state={userName:'',userFullName:'', userAccess:'', countryId:'', userPassword:'', checkedShops:[], errors:[], isLoginValid: true}
 
 	handleNameChange(e) {
-    	this.setState({ countryName: e.target.value });
+    	this.setState({ userFullName: e.target.value });
   	}
 	
-	handlePhoneChange(e) {
-    	this.setState({ phone: e.target.value });
+	handleCountryChange(e) {
+    	this.setState({ countryId: e.target.value });
   	}
+	componentWillMount() {
+		this.props.dispatch(actions.getShops(this.props.token, this.props.id))
+		this.props.dispatch(actions.getCountries(this.props.token, this.props.id))
+		
+	}
+	componentWillReceiveProps(nextProps) {
+  		nextProps.isSent&&this.props.router.push('/users');
 
-  	handleSave(e) {
-  		// this.props.onLogin(this.state.email, this.state.password);
-      this.props.dispatch(actions.addCountry(this.props.token, this.props.id, this.state.countryName, this.state.phone)); 
   	}
+	componentDidMount() {
+  		this.props.isSent&&this.props.dispatch(actions.clearState())
+  	}
+  	handleSave(e) {
+  		// username, password, fullname, access, country_id, shops
+		this.state.userName&&
+		this.state.userAccess&&
+		this.state.countryId&&
+		this.state.userPassword&&
+    	this.props.dispatch(actions.addUser(this.props.token, this.props.id, this.state.userName, this.state.userPassword, this.state.userAccess, this.state.countryId, this.state.checkedShops)); 
+  		
+  		!this.state.userName&&this.setState({errors:[{message:'Логин должен быть заполнен'}]})
+  		!this.state.userAccess&&this.setState({errors:[{message:'Доступ должен быть указан'}]})
+  		!this.state.countryId&&this.setState({errors:[{message:'Страна должна быть указана'}]})
+  		!this.state.userPassword&&this.setState({errors:[{message:'Пароль должен быть заполнен'}]})
+
+	}
   	componentWillReceiveProps(nextProps) {
-  		nextProps.isSent&&this.props.router.push('/countries');
-  		console.log(nextProps.isSent)
+  		nextProps.isSent&&this.props.router.push('/users');
+  	}
+  	handleCheck(e) {
+		this.setState({checkedShops:e})
+  	}
+  	handleAccessChange(e) {
+		this.setState({userAccess:e.target.value})
+  	}
+  	handleLoginChange(e) {
+  		e.target.value.match(" ")?this.setState({isLoginValid:false}):this.setState({isLoginValid:true})
+  		this.setState({userName:e.target.value})
+  	}
+  	handlePassChange(e) {
+  		this.setState({userPassword:e.target.value})
   	}
 	render() {
-		console.log("user",this.props)
 		// const {countries} = this.props.countries;
+		// console.log("ADD", this.state)
+		const accessList = [{id:1, name:'Суперадмин'}, {id:2, name:'Админ'}, {id:3, name:'Пользователь'}]
 		return (
-			<div style={{display:'flex', alignItems:'center', padding:'30px 30px 60px 30px', borderBoxing:'border-box', flexDirection:'column'}}>
-				<div className="add-country-form" >
-					<div className="form-group form-group1">
-		              <label className="col-lg-3" style={{lineHeight:'2.5em'}}>Имя</label>
-		              <Input placeholder="Беларусь"  value={this.state.countryName} onFieldChange={(e)=>this.handleNameChange(e)}/>
-		            </div>
-		            <div className="form-group form-group1">
-		              <label className="col-lg-3" style={{lineHeight:'2.5em'}}>Контактный телефон</label>
-		              <Input placeholder="+375(17) 227-46-74" value={this.state.phone} onFieldChange={(e)=>this.handlePhoneChange(e)} />
-		            </div>
-		            <div style={{width:'100%', display:'flex', justifyContent:'space-between', marginTop:'25px'}}>
-		            	<Button onClick={(e)=>this.props.router.push('/countries')} label="Назад" style={{textAlign:'right'}} size="btn-sm" color="btn-warning"   /> 
+			<div style={{width:'100%', display:'flex', flexDirection:'column', alignItems:'center'}}>
+				<div
+					className="route-wrapper" style={{marginBottom:20, padding:'3%', paddingBottom:'2%', width:'100%'}}>
+						<div
+							className="form-group form-group1">
+			              <label className="col-lg-2 c-col" style={{lineHeight:'2.5em'}}>Логин</label>
+			              <Input required format={"login"}errorMessage={"Логин должен содержать одно слово из латинских букв, цифр, ./-/_"} isValid={this.state.isLoginValid} placeholder="Введите логин пользователя"  value={this.state.userName} onFieldChange={(e)=>this.handleLoginChange(e)}/>
+			            </div>
+			            <div className="form-group form-group1">
+			              <label className="col-lg-2 c-col" style={{lineHeight:'2.5em'}}>Пароль</label>
+			              <Input required format={"password"} errorMessage={"Пароль не должен содержать буквы кириллицы и состоять больше чем из одного слова"} placeholder="Введите пароль пользователя "  value={this.state.userPassword} onFieldChange={(e)=>this.handlePassChange(e)}/>
+			            </div>
+			          
+						<div className="form-group form-group1">
+			            	<label className="col-lg-2 c-col" style={{lineHeight:'2.5em'}}>Доступ</label>
+							<ItemSelect  defaultOption={"Выберите доступ"} onSelect={(e)=>this.handleAccessChange(e)} items={accessList}/>
+			            	
+			            </div>
+			            <div className="form-group form-group1">
+			            	<label className="col-lg-2 c-col" style={{lineHeight:'2.5em'}}>Страна</label>
+							<ItemSelect defaultOption={"Выберите страну"} onSelect={(e)=>this.handleCountryChange(e)} items={this.props.countries}/>
+			 
+			            </div>
+			            
+					
+				
+				</div>
+				<div className="route-wrapper" style={{padding:'3%', width:'100%'}}>
+					
+					<ShopTable  checkedItems={[]} getItems={e=>this.handleCheck(e)} router={this.props.router} items={this.props.shops}/>
+					<div style={{width:'100%', display:'flex', justifyContent:'flex-end', marginTop:'25px'}}>
 
 		            	<Button onClick={(e)=>this.handleSave(e)} label="Сохранить" style={{textAlign:'right'}} size="btn-sm" color="btn-warning"   /> 
 		            	
 		            </div>
-				</div>
-				<div style={{color:'red'}}>
+		            <div style={{color:'red'}}>
 
-					{this.props.errors.map((item,i)=> (<div key={i}>{item.message}</div>))}
+					{this.state.errors.map((item,i)=> (<div key={i}>{item.message}</div>))}
 				</div>
+				</div>
+
 			</div>
 
 
@@ -70,8 +127,10 @@ function mapStateToProps(state) {
   return {
     token:state.app.token,
     id:state.app.id,
-    isSent: state.country.addSuccess,
-    errors: state.country.errors
+    isSent: state.user.addSuccess,
+    errors: state.user.errors,
+    shops:state.shops.shops,
+    countries:state.countries.countries
 
   };
 }

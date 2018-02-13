@@ -24,7 +24,22 @@ const getRouteName=(name)=> {
       return 'пользователи';
     case 'retailers':
       return 'розничные сети';
-
+    case 'shops':
+      return 'магазины';
+    case 'questionswh':
+      return 'вопросы(whirlpool)';
+    case 'questionsother':
+      return 'вопросы(другие)'
+    case 'downloadmatrix':
+      return 'выгрузка таблицы';
+    case 'reports':
+      return 'отчеты';
+    case 'question_reports':
+      return 'отчет по вопросам';
+    case 'comment_reports':
+      return 'отчет по комментариям';
+    case '':
+      return 'отчеты';
   }
 }
 
@@ -77,8 +92,9 @@ export default class MenuItem extends React.Component {
               <div>
                 <span>{this.props.linkText}</span>
               </div>
-              <div>
-                <input type="radio" readOnly checked={isActive&&"true"}/>
+              <div className="radio-menu">
+                <input type="radio" id={this.props.linkText} readOnly checked={isActive&&"true"}/>
+                <label htmlFor={this.props.linkText}></label>
               </div>
             </div>
           </Link>

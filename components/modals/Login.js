@@ -42,30 +42,27 @@ class Login extends Component {
 	render() {
     // console.log("app", this.props.app)
     const {dispatch} = this.props;
-
+    // console.log("222", this.props.errors)
 		return (
-			<section className="wrapper-md animated fadeInUp">
-        <form role="form">
-        	<select name="account" className="form-control m-b"><option>select an endpoint</option> <option>localhost</option></select>
-            <div className="form-group"><Input ref="emailRef" autoComplete={'off'} format="email" icon="fa fa-user" required={true} errorMessage="Please verify your email" placeholder="email" value={this.state.email} onFieldChange={(e)=>this.handleEmailChange(e)} /></div>
-            <div className="form-group"><Input ref="loginRef" autoComplete={'off'} format="password" icon="fa fa-lock" required={true} errorMessage="Password is required" placeholder="password" value={this.state.password} onFieldChange={(e)=>this.handlePassChange(e)} /></div>
+        <form role="form" style={{position:'relative', bottom:'50px'}}>
+            <div className="login-logo"></div>
+            <div  ><Input style={{marginBottom:'10px'}} ref="emailRef" isFull={true} autoComplete={'off'} format="login"  required={true} errorMessage="Логин не должен содержать буквы кириллицы или пробел" placeholder="Введите имя пользователя" value={this.state.email} onFieldChange={(e)=>this.handleEmailChange(e)} /></div>
+            <div ><Input style={{marginBottom:'10px'}} ref="loginRef" isFull={true} autoComplete={'off'} format="password" required={true} errorMessage="Пароль не должен содержать буквы кириллицы или пробел" placeholder="Введите пароль" value={this.state.password} onFieldChange={(e)=>this.handlePassChange(e)} /></div>
             <p className="help-block">{this.props.errorMessage ? this.props.errorMessage.message : ''}</p>
             <div className="form-group">
-                <button type="button" onClick={(e)=>this.handleLogin(e)} className="btn btn-info btn-block w-pad">Login</button>
+                <button type="button" onClick={(e)=>this.handleLogin(e)} className="btn btn-warning btn-block w-pad">Войти</button>
             </div>
-            <div className="form-group">
-              <p>{this.state.error}</p>
+            <div className="form-group" style={{color:'red', textAlign:'center'}}>
+              <p>{this.props.errors.map(e=>e.message)}</p>
             </div>
-            <div className="text-center">
-              <a href="javascript:;" onClick={e=>dispatch(actions.logout())} className="w-login">Forgot your password?</a>
-            </div>
+            <div style={{position:'fixed', bottom:10, right:'50%', textAlign:'center'}}>version: 1.0.8</div>
         </form>
-      </section>
 		);
 	}
 }
 const mapStateToProps = state => ({
-    app: state.app
+    app: state.app,
+    errors:state.app.errors
 });
 
 // const mapDispatchToProps = dispatch => ({

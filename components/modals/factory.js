@@ -1,14 +1,23 @@
-/**
- * Copyright 2015-present, Lights in the Sky (3273741 NS Ltd.)
- * All rights reserved.
- *
- * This source code is licensed under the license found in the
- * LICENSE file in the root directory of this source tree. 
- * 
- * @providesModule Modal
- */
 
 import React, { Component } from "react";
+
+
+/*
+<div style={{padding:10}}>
+              <button
+                type="button"
+                className="text-muted close"
+                data-dismiss="modal"
+                aria-hidden="true"
+              >
+                ×
+              </button>
+              
+            </div>
+
+
+*/
+
 
 class ModalFromFactory extends Component {
   render() {
@@ -27,20 +36,11 @@ class ModalFromFactory extends Component {
         role="dialog"
         aria-labelledby="myModalLabel"
         aria-hidden="true"
+        style={{zIndex:'9002'}}
       >
         <div className={`modal-dialog ${size}`}>
           <div className="modal-content">
-            <div className="modal-header">
-              <button
-                type="button"
-                className="text-muted close"
-                data-dismiss="modal"
-                aria-hidden="true"
-              >
-                ×
-              </button>
-              <h4 className="modal-title">{this.props.title}</h4>
-            </div>
+            
             <div className="modal-body">
               <ModalComponent {...this.props} />
             </div>

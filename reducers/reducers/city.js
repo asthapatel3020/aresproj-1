@@ -25,6 +25,8 @@ export default function app(state = initialState, action) {
 			return {...initialState, editSuccess:true}
 		case "EDIT_EDIT_FAILURE":
 			return {...state, editSuccess:false, errors:normaliseItems(action.error.data.errors)}
+		case "CLEAR":
+			return initialState;
 	default:
     	return state;
 	}

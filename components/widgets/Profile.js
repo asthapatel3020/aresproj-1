@@ -12,36 +12,37 @@ import React, {Component} from 'react';
 import {Link} from 'react-router';
 import * as actions from '../../actions';
 import { connect } from "react-redux";
-
-
-class Profile extends Component {
-	render() {
-		return (
-			<li className="dropdown">
-        <a href="#" className="dropdown-toggle" data-toggle="dropdown">
-          <span className="thumb-sm avatar pull-left">
-            <img src={this.props.profile ? this.props.profile.avatar : ''}/>      
-          </span>
-          <b className="caret"></b>
-        </a>
-        <ul className="dropdown-menu animated fadeInRight">
-          <span className="arrow top"></span>
-          <li>
-            <Link to="/profile">Profile</Link>
-          </li>
-          <li>
-            <Link to="/account">Account</Link>
-          </li>
-          <li>
-            <Link to="/settings">Settings</Link>
-          </li>
-          <li className="divider"></li>
-          <li onClick={e=>this.props.dispatch(actions.logout())}>
+import {Fa, Button} from '../../components/ui'
+/*
+<li onClick={e=>this.props.dispatch(actions.logout())}>
             <Link  to="/">Logout</Link>
           </li>
-        </ul>
-      </li>
+
+          */
+class Profile extends Component {
+	render() {
+    // console.log("w", this.props)
+		return (
+			<div className="prof-section">
+        <div style={{textAlign:'center', padding:'0 25px'}}>
+          <div style={{fontSize:'1.1em', color:'black'}}>{this.props.name}</div>
+          <div>{this.props.countryName}</div>
+        </div>
+        <div >
+          <Button onClick={(e)=>{this.props.dispatch(actions.logout()), this.props.router.push('/')}} label="Выйти" style={{textAlign:'right', padding:'7px 8px'}} size="btn-xs" color="btn-warning"   /> 
+        </div>
+      </div>
 		);
 	}
 }
-export default connect()(Profile);
+function mapStateToProps(state) {
+  return {
+    token:state.app.token,
+    name:state.app.username,
+    isSent: state.retailer.addSuccess,
+    errors: state.retailer.errors,
+    countryName: state.app.country&&state.app.country.name
+
+  };
+}
+export default connect(mapStateToProps)(Profile);

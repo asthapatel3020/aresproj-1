@@ -39,24 +39,28 @@ class AddCity extends Component {
   	componentWillReceiveProps(nextProps) {
   		nextProps.isSent&&this.props.router.push('/cities');
   	}
+  	componentDidMount() {
+  		this.props.isSent&&this.props.dispatch(actions.clearState())
+  	}
 	render() {
-		console.log("this", this.props.countries)
 		let mapa = {countries:[this.props.userCountry]};
   		let items = this.props.userAccess==1?this.props.countries:mapa;
 		// const {countries} = this.props.countries;
 		return (
-			<div style={{display:'flex', alignItems:'center', padding:'30px 30px 60px 30px', borderBoxing:'border-box', flexDirection:'column'}}>
+			<div 
+				className="route-wrapper"
+				style={{display:'flex', alignItems:'center', padding:'30px 30px 60px 30px', borderBoxing:'border-box', flexDirection:'column'}}
+			>
 				<div className="add-country-form" >
 					<div className="form-group form-group1">
-		              <label className="col-lg-3" style={{lineHeight:'2.5em'}}>Имя</label>
+		              <label className="col-lg-2 c-col" style={{lineHeight:'2.5em'}}>Страна</label>
 		              <ItemSelect defaultValue={this.state.countryId} onSelect={(e)=>this.handleNameChange(e)} items={items.countries}/>
 		            </div>
 		            <div className="form-group form-group1">
-		              <label className="col-lg-3" style={{lineHeight:'2.5em'}}>Название</label>
-		              <Input placeholder="Москва" value={this.state.cityName} onFieldChange={(e)=>this.handleCityNameChange(e)} />
+		              <label className="col-lg-2 c-col" style={{lineHeight:'2.5em'}}>Город</label>
+		              <Input placeholder="Москва" required format={"noNumbers"} errorMessage={"Название должно состоять из букв кириллицы"} isFull value={this.state.cityName} onFieldChange={(e)=>this.handleCityNameChange(e)} />
 		            </div>
-		            <div style={{width:'100%', display:'flex', justifyContent:'space-between', marginTop:'25px'}}>
-		            	<Button onClick={(e)=>this.props.router.push('/cities')} label="Назад" style={{textAlign:'right'}} size="btn-sm" color="btn-warning"   /> 
+		            <div style={{width:'100%', display:'flex', justifyContent:'flex-end', marginTop:'25px'}}>
 
 		            	<Button onClick={(e)=>this.handleSave(e)} label="Сохранить" style={{textAlign:'right'}} size="btn-sm" color="btn-warning"   /> 
 		            	
