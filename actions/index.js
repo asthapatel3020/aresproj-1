@@ -1,7 +1,6 @@
 import axios from 'axios';
 import qs from 'qs'
-// export const API_URL = 'http://iqlabs.kz/whirlpool/public/';
-// const API_URL = 'https://api.whirlpool-kz.net/';
+
 export const API_URL = 'https://gg.com';
 
 let config = { headers:{'Authorization': "bearer " + token}}
