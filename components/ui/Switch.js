@@ -1,15 +1,6 @@
-/**
- * Copyright 2015-present, Lights in the Sky (3273741 NS Ltd.)
- * All rights reserved.
- *
- * This source code is licensed under the license found in the
- * LICENSE file in the root directory of this source tree. 
- * 
- * @providesModule Switch
- */
+
 
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 
 var update = require("react-addons-update");
 
@@ -68,14 +59,6 @@ class Switch extends Component {
   }
 }
 
-Switch.propTypes = {
-  onChange: PropTypes.func,
-  on: PropTypes.bool,
-  classes: PropTypes.string
-};
 
-Switch.defaultProps = {
-  on: false
-};
 
 export default Switch;

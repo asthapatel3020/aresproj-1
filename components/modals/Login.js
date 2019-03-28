@@ -1,13 +1,3 @@
-/**
- * Copyright 2015-present, Lights in the Sky (3273741 NS Ltd.)
- * All rights reserved.
- *
- * This source code is licensed under the license found in the
- * LICENSE file in the root directory of this source tree. 
- * 
- * @providesModule Login
- */
-
 import React, {Component} from 'react';
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -46,16 +36,16 @@ class Login extends Component {
 		return (
         <form role="form" style={{position:'relative', bottom:'50px'}}>
             <div className="login-logo"></div>
-            <div  ><Input style={{marginBottom:'10px'}} ref="emailRef" isFull={true} autoComplete={'off'} format="login"  required={true} errorMessage="Логин не должен содержать буквы кириллицы или пробел" placeholder="Введите имя пользователя" value={this.state.email} onFieldChange={(e)=>this.handleEmailChange(e)} /></div>
-            <div ><Input style={{marginBottom:'10px'}} ref="loginRef" isFull={true} autoComplete={'off'} format="password" required={true} errorMessage="Пароль не должен содержать буквы кириллицы или пробел" placeholder="Введите пароль" value={this.state.password} onFieldChange={(e)=>this.handlePassChange(e)} /></div>
+            <div style={{minHeight:34}}><Input style={{marginBottom:'10px'}}  isFull={true} format="login"  required={true} errorMessage="Логин не должен содержать буквы кириллицы или пробел" placeholder="Введите имя пользователя" value={this.state.email} onFieldChange={(e)=>this.handleEmailChange(e)} /></div>
+            <div style={{minHeight:34}}><Input style={{marginBottom:'10px'}}  isFull={true} format="password" required={true} errorMessage="Пароль не должен содержать буквы кириллицы или пробел" placeholder="Введите пароль" value={this.state.password} onFieldChange={(e)=>this.handlePassChange(e)} /></div>
             <p className="help-block">{this.props.errorMessage ? this.props.errorMessage.message : ''}</p>
             <div className="form-group">
                 <button type="button" onClick={(e)=>this.handleLogin(e)} className="btn btn-warning btn-block w-pad">Войти</button>
             </div>
-            <div className="form-group" style={{color:'red', textAlign:'center'}}>
+            <div style={{color:'red', textAlign:'center', position:'absolute', bottom:-50, width:'100%'}}>
               <p>{this.props.errors.map(e=>e.message)}</p>
             </div>
-            <div style={{position:'fixed', bottom:10, right:'50%', textAlign:'center'}}>version: 1.0.8</div>
+            <div style={{position:'fixed', bottom:10, right:'50%', textAlign:'center'}}>version: 1.0.11</div>
         </form>
 		);
 	}

@@ -1,20 +1,28 @@
-/**
- * Copyright 2015-present, Lights in the Sky (3273741 NS Ltd.)
- * All rights reserved.
- *
- * This source code is licensed under the license found in the
- * LICENSE file in the root directory of this source tree. 
- * 
- * @providesModule timezonecontrol
- */
-
 import React, { Component } from 'react';
+import Select from 'react-select';
+import 'react-select/dist/react-select.css';
+// import { colourOptions } from '../data';
+// import { Note } from '../styled-components';
+
 
 const itemSelect = ({...props}) => {
-	return <select  defaultValue={props.defaultValue} style={props.style} onChange={props.onSelect} className="form-control"  name="person[time_zone_name]" id="person_time_zone_name">
-		{props.items.length>1&&<option disabled>Выберите из списка</option>}
-		{props.items.map((item,i)=>(<option value={item.id} key={i}>{item.name}</option>))}
-	</select>
+	return (
+		<Select
+          className="basic-single"
+          classNamePrefix="select"
+          // defaultValue={colourOptions[0]}
+          isSearchable={true}
+          name={props.name}
+          options={props.items}
+          value={props.value}
+          onChange={(e)=>props.onChange(e)}
+          style={props.style}
+        />
+	)
+	// return <select  defaultValue={props.defaultValue} style={props.style} onChange={props.onSelect} className="form-control"  name="person[time_zone_name]" id="person_time_zone_name">
+	// 	{props.items.length>1&&<option disabled>{props.disLabel}</option>}
+	// 	{props.items.map((item,i)=>(<option value={item.id} key={i}>{item}</option>))}
+	// </select>
 }
 
 export default itemSelect;

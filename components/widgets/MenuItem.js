@@ -14,32 +14,12 @@ import { Link } from 'react-router';
 const getRouteName=(name)=> {
 
   switch (name.split("/")[0]) {
-    case 'countries':
-      return 'страны';
-    case 'cities':
-      return 'города';
-    case 'uploadMatrix':
-      return 'загрузка матрицы';
-    case 'users':
-      return 'пользователи';
-    case 'retailers':
-      return 'розничные сети';
-    case 'shops':
-      return 'магазины';
-    case 'questionswh':
-      return 'вопросы(whirlpool)';
-    case 'questionsother':
-      return 'вопросы(другие)'
-    case 'downloadmatrix':
-      return 'выгрузка таблицы';
-    case 'reports':
-      return 'отчеты';
-    case 'question_reports':
-      return 'отчет по вопросам';
-    case 'comment_reports':
-      return 'отчет по комментариям';
+    case'graphic_by_doctor':
+      return 'graphic by doctor'
+    case'uploadMatrix':
+      return 'upload matrix'
     case '':
-      return 'отчеты';
+      return 'graphic';
   }
 }
 

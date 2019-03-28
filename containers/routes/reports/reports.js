@@ -1,195 +1,72 @@
-import React, {Component} from 'react';
-import {Link} from 'react-router';
-import * as actions from '../../../actions';
-import { connect } from "react-redux";
-import Dolya from './dolya/dolya'
-import Audits from './audits/audits'
-import DifferentPrices from './differentPrices/differentPrices'
-import DifferentProducts from './differentProducts/differentProducts'
-
-class Reports extends Component  {
-	state={reportChoice:'dolya'}
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import PaymentsByProvider from './billing/paymentsByProvider/paymentsByProvider'
+import BillingByProvider from './billing/billingByProvider/billingByProvider'
+import PatientBillingHistory from './billing/patientBillingHistory/patientBillingHistory'
+import PaymentRegister from './billing/paymentRegister/paymentRegister'
+import ArbitrationByProvider from './billing/arbitrationByProvider/arbitrationByProvider'
+import ListOfPatients from './patients/listOfPatients/listOfPatients'
+import WithoutPickup from './patients/withoutPickup/withoutPickup'
+import ReadyForBilling from './patients/readyForBilling/readyForBilling'
+import ActivePatientIns from './patients/activePatientIns/activePatientIns'
+import * as actions from '../../../actions'
+class Reports extends Component {
+	state = {
+		modalState1:false,
+	    modalState2:false,
+	    modalState3:false,
+	    modalState4:false,
+	    modalState5:false,
+	    modalState6:false,
+	    modalState7:false,
+	    modalState8:false,
+	    modalState9:false,
+	    modalState10:false,
+	    modalState11:false,
+	    modalState12:false,
+	    modalState13:false,
+	    modalState14:false,
+	    modalState15:false,
+	    modalState16:false
+	}
 	componentWillMount() {
-
-		this.props.dispatch(actions.getDolya(this.props.token, this.props.id, this.props.filters))
-		this.props.dispatch(actions.getAuditsLineChart(this.props.token, this.props.id, this.props.filters))
-		this.props.filters.from&&this.props.dispatch(actions.getDolyaPie(this.props.token, this.props.id, this.props.filters))
-		this.props.filters.from&&this.props.dispatch(actions.getDolyaRetailStats(this.props.token, this.props.id, this.props.filters))
-		this.props.filters.from&&this.props.dispatch(actions.getDolyaCategoryStats(this.props.token, this.props.id, this.props.filters))
-		
-		this.props.filters.from&&this.props.dispatch(actions.getAuditsRetailStats(this.props.token, this.props.id, this.props.filters))
-		this.props.filters.from&&this.props.dispatch(actions.getAuditsUserStats(this.props.token, this.props.id, this.props.filters))
-		this.props.filters.from&&this.props.dispatch(actions.getAllStats(this.props.token, this.props.id, this.props.filters))
-		
-		this.props.dispatch(actions.getPricesLineChart(this.props.token, this.props.id, this.props.filters))
-		this.props.filters.from&&this.props.dispatch(actions.getPricesRetailStats(this.props.token, this.props.id, this.props.filters))
-		this.props.filters.from&&this.props.dispatch(actions.getPricesCategoryStats(this.props.token, this.props.id, this.props.filters))
-
-		this.props.dispatch(actions.getAmountLineChart(this.props.token, this.props.id, this.props.filters))
-		this.props.filters.from&&this.props.dispatch(actions.getAmountRetailStats(this.props.token, this.props.id, this.props.filters))
-		this.props.filters.from&&this.props.dispatch(actions.getAmountCategoryStats(this.props.token, this.props.id, this.props.filters))
-		
 	}
 	componentWillReceiveProps(nextProps) {
-		nextProps.filters.from&&
-		nextProps.filters.to&&
-		nextProps.filters!==this.props.filters&&		
-		this.props.dispatch(actions.getDolyaPie(this.props.token, this.props.id, nextProps.filters))
-		
-		nextProps.filters.from&&
-		nextProps.filters!==this.props.filters&&
-		this.props.dispatch(actions.getAllStats(this.props.token, this.props.id, nextProps.filters))
-
-		nextProps.filters!==this.props.filters&&
-		this.props.dispatch(actions.getDolya(this.props.token, this.props.id, nextProps.filters))
-		
-		nextProps.filters.from&&
-		nextProps.filters!==this.props.filters&&
-		this.props.dispatch(actions.getDolyaRetailStats(this.props.token, this.props.id, nextProps.filters))
-		
-		nextProps.filters.from&&
-		nextProps.filters!==this.props.filters&&
-		this.props.dispatch(actions.getDolyaCategoryStats(this.props.token, this.props.id, nextProps.filters))
-
-		nextProps.filters!==this.props.filters&&
-		this.props.dispatch(actions.getAuditsLineChart(this.props.token, this.props.id, nextProps.filters))
-		
-		nextProps.filters.from&&
-		nextProps.filters!==this.props.filters&&
-		this.props.dispatch(actions.getAuditsRetailStats(this.props.token, this.props.id, nextProps.filters))
-		
-		nextProps.filters.from&&
-		nextProps.filters!==this.props.filters&&
-		this.props.dispatch(actions.getAuditsUserStats(this.props.token, this.props.id, nextProps.filters))
-
-		nextProps.filters!==this.props.filters&&
-		this.props.dispatch(actions.getPricesLineChart(this.props.token, this.props.id, nextProps.filters))
-		
-		nextProps.filters.from&&
-		nextProps.filters!==this.props.filters&&
-		this.props.dispatch(actions.getPricesRetailStats(this.props.token, this.props.id, nextProps.filters))
-		nextProps.filters.from&&
-		nextProps.filters!==this.props.filters&&
-		this.props.dispatch(actions.getPricesCategoryStats(this.props.token, this.props.id, nextProps.filters))
-
-		nextProps.filters!==this.props.filters&&
-		this.props.dispatch(actions.getAmountLineChart(this.props.token, this.props.id, nextProps.filters))
-		
-		nextProps.filters.from&&
-		nextProps.filters!==this.props.filters&&
-		this.props.dispatch(actions.getAmountRetailStats(this.props.token, this.props.id, nextProps.filters))
-		
-		nextProps.filters.from&&
-		nextProps.filters!==this.props.filters&&
-		this.props.dispatch(actions.getAmountCategoryStats(this.props.token, this.props.id, nextProps.filters))
-	
-		
+		this.props.modal!==nextProps.modal&&this.setState({[`modalState${nextProps.modal}`]:true})
 	}
-	render() {
-		// console.log("graph", this.props.reports.allStats)
-		const {
-				piechart, 
-				retailStats, 
-				catStats, 
-				auditsGraphic, 
-				auditsRetailStats, 
-				auditsUsers, 
-				allStats, 
-				pricesGraphic,
-				pricesRetailStats,
-				pricesCategoryStats,
-				pricesProductStats,
-				productMeta,
-				amountGraphic,
-				amountRetailStats,
-				amountCategoryStats,
-				amountProductStats,
-				amountProductMeta,
+	openModal(modal) {
+	    this.setState({[`modalState${modal}`]:true})
+	  }
+	  closeModal(modal, withoutAlert) {
+	    	
+	      if (window.confirm('Are you sure you want to close the window?')) {
+	        this.setState({[`modalState${modal}`]:false})
+			this.props.dispatch(actions.openReportsModal(0))
 
-			} = this.props.reports
+	      }
+	    
+	  }
+	render() {
+		console.log('reportsModals', this.props.modal)
 		return (
-			<div style={{width:'100%', display:'flex', flexDirection:'column', alignItems:'center'}}>
-				<div className="route-wrapper" style={{marginBottom:20, width:'100%', display:'flex', height:120, padding:0}}>
-					<div 
-						onClick={()=>this.setState({reportChoice:'dolya'})} 
-						className={this.state.reportChoice=='dolya'?'report-chosen report-choice':'report-choice'}
-					>
-						<div><i className="fa fa-pie-chart" style={{color:'#03a9f4'}}></i></div>
-						<div>{allStats.shelf_share?`${allStats.shelf_share}%`:'-'}</div>
-						<div>Доля на полке</div>
-					</div>
-					<div 
-						onClick={()=>this.setState({reportChoice:'audits'})} 
-						className={this.state.reportChoice=='audits'?'report-chosen report-choice':'report-choice'}
-					>
-						<div><i className="fa fa-copy" style={{color:'#ffc333'}}></i></div>
-						<div>{allStats.audits?allStats.audits:'-'}</div>
-						<div>Аудитов</div>
-					</div>
-					<div 
-						onClick={()=>this.setState({reportChoice:'prices'})} 
-						className={this.state.reportChoice=='prices'?'report-chosen report-choice':'report-choice'}
-					>
-						<div><i className="fa fa-money" style={{color:'#18c751'}}></i></div>
-						<div>{allStats.different_prices?allStats.different_prices:'-'}</div>
-						<div>Несовпадений цен</div>
-					</div>
-					<div 
-						onClick={()=>this.setState({reportChoice:'products'})} 
-						className={this.state.reportChoice=='products'?'report-chosen report-choice':'report-choice'}
-					>
-						<div><i className="fa fa-remove" style={{color:'#ea5a5a'}}></i></div>
-						<div>{allStats.different_amounts?allStats.different_amounts:'-'}</div>
-						<div>Нессответсвий ассортимента</div>
-					</div>
-				</div>
-				<div style={{width:'100%'}}>
-					{this.state.reportChoice=='dolya'&&
-						<Dolya  
-							graphic={this.props.reports.graphic} 
-							piechart={piechart}
-							retailStats={retailStats}
-							catStats={catStats}
-						/>
-					}
-					{this.state.reportChoice=='audits'&&
-						<Audits  
-							graphic={auditsGraphic} 
-							retailStats={auditsRetailStats}
-							userStats={auditsUsers}
-						/>
-					}
-					{this.state.reportChoice=='prices'&&
-						<DifferentPrices  
-							graphic={pricesGraphic} 
-							retailStats={pricesRetailStats}
-							categoryStats={pricesCategoryStats}
-							productStats={pricesProductStats}
-							productMeta={productMeta}
-						/>
-					}
-					{this.state.reportChoice=='products'&&
-						<DifferentProducts 
-							graphic={amountGraphic} 
-							retailStats={amountRetailStats}
-							categoryStats={amountCategoryStats}
-							productStats={amountProductStats}
-							productMeta={amountProductMeta}
-						/>
-					}
-				</div>	
+			<div>
+				<ArbitrationByProvider open={this.state.modalState5} onClose={(e)=>this.closeModal(e)}/>
+				<ReadyForBilling open={this.state.modalState8} onClose={(e)=>this.closeModal(e)}/>
+				<ActivePatientIns open={this.state.modalState9} onClose={(e)=>this.closeModal(e)}/>
+				<WithoutPickup open={this.state.modalState7} onClose={(e)=>this.closeModal(e)}/>
+				<ListOfPatients open={this.state.modalState6} onClose={(e)=>this.closeModal(e)}/>
+				<PatientBillingHistory open={this.state.modalState2} onClose={(e)=>this.closeModal(e)}/>
+				<PaymentsByProvider open={this.state.modalState1} onClose={(e)=>this.closeModal(e)}/>
+				<BillingByProvider open={this.state.modalState3} onClose={(e)=>this.closeModal(e)}/>
+				<PaymentRegister open={this.state.modalState4} onClose={(e)=>this.closeModal(e)}/>
 			</div>
 		)
 	}
 }
-function mapStateToProps(state) {
+const mapStateToProps=(state)=>{
   return {
     token:state.app.token,
-    id:state.app.id,
-    filters: state.appliedFilters,
-	errors: state.matrix.errors,
-	isSent:state.matrix.addSuccess,
-	reports:state.reports
+    modal:state.reports.modal
   };
 }
 export default connect(mapStateToProps)(Reports);

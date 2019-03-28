@@ -7,26 +7,16 @@ import { connect } from "react-redux";
 class CommentPhoto extends Component  {
 
 	render() {
-		console.log("PATH2", this.props.path)
+		console.log("OPENED")
 		return (
-			<div 
-				style={{
-					height:'500px', 
-					width:'100%', 
-					backgroundImage:`url(${this.props.path})`,
-					backgroundSize:'cover',
-					backgroundRepeat:'no-repeat',
-					backgroundPosition:'center'
-				}}
-			>
-				
+			<div style={{width:'40%'}}>
+				HELLO
 			</div>
 		)
 	}
 }
 function mapStateToProps(state) {
   return {
-	path:state.modal.path
   };
 }
 export default connect(mapStateToProps)(CommentPhoto);

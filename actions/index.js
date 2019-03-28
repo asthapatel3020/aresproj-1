@@ -1,553 +1,619 @@
-import request from 'axios';
-
-export const API_URL = 'http://iqlabs.kz/whirlpool/public/';
+import axios from 'axios';
+import qs from 'qs'
+// export const API_URL = 'http://iqlabs.kz/whirlpool/public/';
 // const API_URL = 'https://api.whirlpool-kz.net/';
+export const API_URL = 'https://gg.com';
 
-
-export const auth=(email, pass)=> {
+let config = { headers:{'Authorization': "bearer " + token}}
+export const choosePatient=(patient, token)=> {
 	return {
-		type : "USER_AUTH",
-		promise: request.post(`${API_URL}login?username=${email}&password=${pass}`)
-
+		type: "CHOOSE_PATIENT",
+		// promise: axios.get(`${API_URL}patients/${patientId}`)
+		promise: axios.get(`${API_URL}patients?patient_id=${patient}&token=${token}`)
 	}
 }
-
-
-export const getCountries=(token, id)=> {
+export const getCompanies=(token)=> {
 	return {
-		type : "GET_COUNTRIES",
-		promise: request.get(`${API_URL}country/all?uid=${id}&api_token=${token}`)
+		type: "GET_INS_COMPANIES",
+		promise: axios.get(`${API_URL}insurance-companies?token=${token}`)
+	}
+}
+export const getSuppliers=(token)=> {
+	return {
+		type: "GET_SUPPLIERS",
+		promise: axios.get(`${API_URL}supplier-companies?token=${token}`)
+	}
+}
+export const getLines=(token, supplier_id)=> {
+	return {
+		type: "GET_LINES",
+		promise: axios.get(`${API_URL}supplier-companies/${supplier_id}/lines?token=${token}`)
+	}
+}
+export const getSubjects=(token)=> {
+	return {
+		type: "GET_SUBJECTS_LIST",
+		promise: axios.get(`${API_URL}events/subjects?token=${token}`)
+	}
+}
+export const getOffices=(token, name)=> {
+	return {
+		type: "GET_OFFICES",
+		promise: name?
+			axios.get(`${API_URL}offices?name=${name}&token=${token}`):
+			axios.get(`${API_URL}offices?token=${token}`)
+	}
+}
+export const getBillingInfo=(patientId, token)=> {
+	return {
+		type: "GET_BILLING_INFO",
+		promise: axios.get(`${API_URL}patients/${patientId}/billing?token=${token}`)
+	}
+}
+export const getPayments=(patientId, token)=> {
+	return {
+		type: "GET_PAYMENTS",
+		promise: axios.get(`${API_URL}patients/${patientId}/payments?token=${token}`)
+	}
+}
+export const logout=(token)=> {
+	console.log('token',token)
+	return {
+		type: "USER_LOGOUT",
+		promise: axios.get(`${API_URL}auth/logout?token=${token}`)
+		// promise: axios.get(`${API_URL}auth/logout?token=${token}`,{},
+
+		// 	{
+		// headers:{ 'Content-Type':'application/x-www-form-urlencoded'}
+		// })
+	}
+}
+const filterNotes=(filters)=> {
+	let s = ''
+	let done_flag = filters.done_flag?`&done_flag=${filters.done_flag}`:'';
+	let fromDate = filters.fromDate?`&from=${filters.fromDate}`:'';
+	let toDate = filters.toDate?`&to=${filters.toDate}`:'';
+	
+	s = done_flag+fromDate+toDate
+	return s
+	
+}
+export const getNotes=(filters, token)=> {
+	console.log(filters)
+	let filterQuery = filters?filterNotes(filters):''
+	console.log('query',filterQuery)
+	return {
+		type : "GET_NOTES_LIST",
+		promise: axios.get(`${API_URL}events?page=1${filterQuery}`,
+		{
+			headers:{ 'Authorization': "bearer " + token}
+		})
 		
 	}
 }
-export const addCountry=(token, id, name, phone)=> {
-	return {
-		type : "ADD_COUNTRY",
-		promise: request.post(`${API_URL}country/add?name=${name}&phone=${phone}&uid=${id}&api_token=${token}`)
 
-	}
-}
-
-export const chooseEditCountry=(name, phone)=> {
+export const getPatientsList=(page, filters, token)=> {
+	console.log(filters)
+	let filterQuery = filters?checkFilters(filters):''
 	return {
-		type : "CHOOSE_EDIT_COUNTRY",
-		countryName:name,
-		phone:phone
-	}
-}
-export const editCountry=(token, id, name, phone, countryId)=> {
-	return {
-		type : "EDIT_COUNTRY",
-		promise: request.post(`${API_URL}country/update/${countryId}?name=${name}&phone=${phone}&uid=${id}&api_token=${token}`)
-
-	}
-}
-export const logout=()=> {
-	return {
-		type : "USER_LOGOUT"
-	}
-}
-
-export const isAuthenticated=()=> {
-	return {
-		type : "IS_AUTHENTICATED"
-	}
-}
-
-export const getCities=(token, id, countryId)=> {
-	return {
-		type : "GET_CITIES",
-		promise: request.get(`${API_URL}city/all?country_id=${countryId}&uid=${id}&api_token=${token}`)
-	}
-}
-export const addCity=(token, id, countryId, name)=> {
-	return {
-		type : "ADD_CITY",
-		promise: request.post(`${API_URL}city/add?name=${name}&country_id=${countryId}&uid=${id}&api_token=${token}`)
-
-	}
-}
-export const editCity=(token, id, countryId, name, cityId)=> {
-	return {
-		type : "EDIT_CITY",
-		promise: request.post(`${API_URL}city/update/${cityId}?name=${name}&country_id=${countryId}&uid=${id}&api_token=${token}`)
-
-	}
-}
-export const uploadMatrixProducts=(file, token, id, countryId)=> {
-	const formData = new FormData();
-	formData.append('file', file)
-	return {
-		type:"UPLOAD_MATRIX_PRODUCTS",
-		promise: request.post(`${API_URL}product/import?country_id=${countryId}&uid=${id}&api_token=${token}`,
-		formData,{
-		headers:{ 'Content-Type':'multipart/form-data'}
+		type : "GET_PATIENTS_LIST",
+		// promise: axios.get(`${API_URL}patients?`+filterQuery,
+		promise: axios.get(`${API_URL}patients?page=${page}`+filterQuery,
+		{
+			headers:{ 'Authorization': "bearer " + token}
 		})
 	}
 }
-
-export const uploadMatrixCompetitors=(file, token, id, countryId)=> {
-	const formData = new FormData();
-	formData.append('file', file)
+export const checkLastName=(lastName, token)=> {
 	return {
-		type:"UPLOAD_MATRIX_COMPETITORS",
-		promise: request.post(`${API_URL}competitor/import?uid=${id}&api_token=${token}&country_id=${countryId}`,
-		formData,{
-		headers:{ 'Content-Type':'multipart/form-data'}
+		type : "GET_PATIENTS_FOR_LASTNAME",
+		promise: axios.get(`${API_URL}patients?page=${1}&patient_last_nm=${lastName}`,
+		{
+			headers:{ 'Authorization': "bearer " + token}
 		})
 	}
 }
-export const getUsers=(token, id, page)=> {
-	let isPage = page?`&page=${page}`:''
+export const resetPatientsForLastName=()=> {
 	return {
-		type : "GET_USERS",
-		promise: request.get(`${API_URL}user/all?uid=${id}&api_token=${token}`)
+		type : "RESET_PATIENTS_FOR_LASTNAME",
 	}
 }
-export const getRetailers=(token, id, page)=> {
-	let isPage = page?`&page=${page}`:''
+export const getAsyncPatients=(lastName, token)=> {
 	return {
-		type : "GET_RETAILERS",
-		promise: request.get(`${API_URL}retail/all?uid=${id}&api_token=${token}`+isPage)
+		type : "GET_PATIENTS_FOR_SELECT",
+		promise: axios.get(`${API_URL}patients?patient_last_nm=${lastName}&token=${token}`)
 	}
 }
-export const addRetailer=(token, id, name)=> {
+export const getServiceList=(token)=> {
 	return {
-		type : "ADD_RETAILER",
-		promise: request.post(`${API_URL}retail/add?name=${name}&uid=${id}&api_token=${token}`)
+		type : "GET_SERVICE_LIST",
+		promise: axios.get(`${API_URL}services/types?token=${token}`)
 	}
 }
-export const editRetailer=(token, id, name, retailerId)=> {
+export const getProviderList=(token)=> {
 	return {
-		type : "EDIT_RETAILER",
-		promise: request.post(`${API_URL}retail/update/${retailerId}?name=${name}&uid=${id}&api_token=${token}`)
+		type : "GET_PROVIDER_LIST",
+		promise: axios.get(`${API_URL}doctors?token=${token}`)
 	}
 }
-export const getShops=(token, id, page, retailerId)=> {
-	let isPage = page?`&page=${page}`:''
-	let string = retailerId?`&retail_id=${retailerId}`:''
+export const getSpecialties=(token)=> {
 	return {
-		type : "GET_SHOPS",
-		promise: request.get(`${API_URL}shop/all?uid=${id}&api_token=${token}`+string+isPage)
+		type : "GET_SPECIALTY_LIST",
+		promise: axios.get(`${API_URL}specialties?token=${token}`)
 	}
 }
-export const getCategories=(token, id)=> {
+export const getTreatmentsList=(token)=> {
 	return {
-		type : "GET_CATEGORIES",
-		promise: request.get(`${API_URL}category/all?uid=${id}&api_token=${token}`)
+		type : "GET_TREATMENTS_LIST",
+		promise: axios.get(`${API_URL}procedure-codes?token=${token}`)
 	}
 }
-export const getSubCategories=(token, id, catId)=> {
+export const getCompanyInfo=(token)=> {
 	return {
-		type : "GET_SUBCATEGORIES",
-		promise: request.get(`${API_URL}category/all?parent=${catId}&uid=${id}&api_token=${token}`)
+		type : "GET_COMPANY_INFO",
+		promise: axios.get(`${API_URL}company?token=${token}`)
 	}
 }
-export const getQuestionsWh=(token, id, subCatId)=> {
+export const getCodesList=(token)=> {
 	return {
-		type : "GET_QUESTIONSWH",
-		promise: request.get(`${API_URL}question/all/subcategory?uid=${id}&api_token=${token}`)
+		type : "GET_CODES_LIST",
+		promise: axios.get(`${API_URL}diagnosis-codes?token=${token}`)
 	}
 }
-export const getCheckedQuestionsWh=(token, id, subCatId, catId)=> {
-	const subCat = subCatId!==''?`&subcategory_id=${subCatId}`:'';
-	const Cat = catId!==''?`&category_id=${catId}`:'';
-
+export const getPatientVisitRegistry=(patientId, token)=> {
 	return {
-		type : "GET_CHECKED_QUESTIONSWH",
-		promise: request.get(`${API_URL}question/all/subcategory?uid=${id}&api_token=${token}`+subCat+Cat)
+		type: "GET_PATIENT_VISIT_REGISTRY",
+		promise: axios.get(`${API_URL}patients/${patientId}/visit-registry?token=${token}`)
 	}
 }
 
-export const getQuestionsOther=(token, id)=> {
+export const selectCurrentService=(service)=> {
 	return {
-		type : "GET_QUESTIONS_OTHER",
-		promise: request.get(`${API_URL}question/all/brand?uid=${id}&api_token=${token}`)
+		type: "SELECT_CURRENT_SERVICE",
+		service:service
 	}
 }
-export const getCheckedQuestionsOther=(token, id, brandId, catId, subCatId)=> {
-	const brand = brandId!==''?`&brand_id=${brandId}`:'';
-	const cat = catId!==''?`&category_id=${catId}`:'';
-	const subCat = subCatId!==''?`&subcategory_id=${subCatId}`:'';
-
+export const selectCurrentPayment=(payment)=> {
 	return {
-		type : "GET_CHECKED_QUESTIONS_OTHER",
-		promise: request.get(`${API_URL}question/all/brand?uid=${id}&api_token=${token}`+brand+cat+subCat)
+		type: "SELECT_CURRENT_PAYMENT",
+		payment:payment
 	}
 }
-export const getBrands=(token, id)=> {
+export const selectCurrentOffice=(office)=> {
 	return {
-		type : "GET_BRANDS",
-		promise: request.get(`${API_URL}brand/all?uid=${id}&api_token=${token}&own=0`)
+		type: "SELECT_CURRENT_OFFICE",
+		office:office
 	}
 }
-export const createQuestionWh=(question, answers)=> {
+export const selectCurrentBillStatus=(status)=> {
 	return {
-		type : "CREATE_QUESTIONWH",
-		question:question,
-		answers:answers
-		
+		type: "SELECT_CURRENT_STATUS",
+		status:status
 	}
 }
-export const createQuestionOther=(question, answers)=> {
+export const selectCurrentCity=(city)=> {
 	return {
-		type : "CREATE_QUESTION_OTHER",
-		question:question,
-		answers:answers
-		
+		type: "SELECT_CURRENT_CITY",
+		city:city
 	}
 }
-export const setEditQuestionWh=(question)=> {
+export const selectCurrentDoc=(doc)=> {
 	return {
-		type : "SET_EDIT_QUESTIONWH",
-		question:question
-		
+		type: "SELECT_CURRENT_DOC",
+		doc:doc
 	}
 }
-export const deleteLocalQuestionWh=(question)=> {
+export const signIn=(login, pass)=> {
+	console.log('asd')
 	return {
-		type : "DELETE_LOCAL_QUESTION_WH",
-		question:question
-		
+		type: "SIGN_IN",
+		promise: axios.post(`${API_URL}auth/login`,
+			qs.stringify({username:login, password:pass}),
+			{
+		headers:{ 'Content-Type':'application/x-www-form-urlencoded'}
+		})
 	}
 }
-export const editLocalQuestionWh=(question)=> {
+export const isLoggedIn=()=> {
 	return {
-		type : "EDIT_LOCAL_QUESTION_WH",
-		question:question
-		
+		type: 'IS_AUTHENTICATED'
 	}
 }
-export const deleteLocalQuestionOther=(question)=> {
+export const setFilter=(item, type)=> {
 	return {
-		type : "DELETE_LOCAL_QUESTION_OTHER",
-		question:question
-		
+		type: `SET_FILTER_${type.toUpperCase()}`,
+		item:item
 	}
 }
-export const setEditQuestionOther=(question)=> {
+export const editNote=(note)=> {
 	return {
-		type : "SET_EDIT_QUESTIONOTHER",
-		question:question
-		
+		type: `EDIT_NOTE`,
+		note:note
 	}
 }
-export const editLocalQuestionOther=(question)=> {
-	return {
-		type : "EDIT_LOCAL_QUESTION_OTHER",
-		question:question
-		
-	}
-}
-export const editQuestion=(token, id, question, options, questionId)=> {
-	return {
-		type : "EDIT_QUESTION",
-		promise: request.post(`${API_URL}question/update/${questionId}?question=${question}&options=${options}&uid=${id}&api_token=${token}`)
-	}
-}
-export const deleteQuestion=(token, id, questionId)=> {
-	return {
-		type : "DELETE_QUESTION",
-		promise: request.post(`${API_URL}question/delete/${questionId}?uid=${id}&api_token=${token}`)
-	}
-}
-export const addQuestionCategory=(token, id, questions, catId, subCatId)=> {
-	return {
-		type : "ADD_QUESTIONCAT",
-		promise: request.post(`${API_URL}question/add/subcategory?questions=${JSON.stringify(questions)}&category_id=${catId}&subcategory_id=${subCatId}&uid=${id}&api_token=${token}`)
-	}
-}
-export const addUser=(token, id, username, password, access, country_id, shops)=> {
-	let isShops = shops.length>0?`&shops=${shops.toString()}`:''
-	return {
-		type : "ADD_USER",
-		promise: request.post(`${API_URL}user/add?username=${username}&password=${password}&access=${access}&country_id=${country_id}&uid=${id}&api_token=${token}`+isShops)
-	}
-}
-export const editUser=(token, id, userId, username, password, access, country_id, shops)=> {
-	console.log("usq", shops)
-	let isShops = shops.length>0?`&shops=${shops.toString()}`:''
-	return {
-		type : "EDIT_USER",
-		promise: request.post(`${API_URL}user/update/${userId}?username=${username}&password=${password}&access=${access}&country_id=${country_id}&uid=${id}&api_token=${token}`+isShops)
-	}
-}
-export const deleteUser=(token, id, userId)=> {
-	return {
-		type : "DELETE_USER",
-		promise: request.post(`${API_URL}user/delete/${userId}?uid=${id}&api_token=${token}`)
-	}
-}
-export const deleteRetailer=(token, id, retailerId)=> {
-	return {
-		type : "DELETE_RETAILER",
-		promise: request.post(`${API_URL}retail/delete/${retailerId}?uid=${id}&api_token=${token}`)
-	}
-}
-export const addQuestionBrand=(token, id, questions, catId, subCatId, brandId)=> {
-	return {
-		type : "ADD_QUESTIONBRAND",
-		promise: request.post(`${API_URL}question/add/brand?questions=${JSON.stringify(questions)}&category_id=${catId}&subcategory_id=${subCatId}&brand_id=${brandId}&uid=${id}&api_token=${token}`)
-	}
-}
-export const addShop=(token, id, shopName, address, latitude, longitude, countryId, cityId, retailId)=> {
-	return {
-		type : "ADD_SHOP",
-		promise: request.post(`${API_URL}shop/add?name=${shopName}&address=${address}&latitude=${latitude}&longitude=${longitude}&country_id=${countryId}&city_id=${cityId}&retail_id=${retailId}&uid=${id}&api_token=${token}`)
-	}
-}
-export const setUserEdit=(user)=> {
-	return {
-		type : "SET_EDIT_USER",
-		user:user
-		
-	}
-}
-export const editShop=(token, id, shopName, address, latitude, longitude, countryId, cityId, retailId, shopId)=> {
-	return {
-		type : "EDIT_SHOP",
-		promise: request.post(`${API_URL}shop/update/${shopId}?name=${shopName}&address=${address}&latitude=${latitude}&longitude=${longitude}&country_id=${countryId}&city_id=${cityId}&retail_id=${retailId}&uid=${id}&api_token=${token}`)
-	}
-}
-export const deleteShop=(token, id, shopId)=> {
-	return {
-		type : "DELETE_SHOP",
-		promise: request.post(`${API_URL}shop/delete/${shopId}?uid=${id}&api_token=${token}`)
-	}
-}
-
-export const clearState=()=> {
-	return {type:"CLEAR"}
-}
-export const addFilter=(filter, filterType, periodType)=> {
-
-	return {type:"ADD_FILTER", filter:filter, filterType:filterType, periodType:periodType}
-}
-export const applyFilter=(filters)=> {
-	return {
-		type : "APPLY_FILTER", filters:filters
-	}
-}
-
-export const checkFilters=(filters)=> {
+const checkFilters=(filters)=> {
+	console.log('filters',filters)
 	let finalQuery = '';
-	let period = filters.from&&filters.to?`&from=${filters.from}&to=${filters.to}`:'';
-	let country = filters.countryId?`&country_id=${filters.countryId}`:'';
-	let city = filters.cityId?`&city_id=${filters.cityId}`:'';
-	let retailer = filters.retailerId?`&retail_id=${filters.retailerId}`:'';
-	let shop = filters.shopId?`&shop_id=${filters.shopId}`:'';
-	let category = filters.categoryId?`&category_id=${filters.catId}`:'';
-	let subcategory = filters.subcategoryId?`&subcategory_id=${filters.subCatId}`:'';
-	let brand = filters.brandId?`&brand_id=${filters.brandId}`:'';
-	let model = filters.modelId?`&model_id=${filters.modelId}`:'';
-	let user = filters.userId?`&user_id=${filters.userId}`:'';
+	let patientId = filters.patientId?`&patient_id=${filters.patientId}`:'';
+	let firstName = filters.firstName?`&patient_first_nm=${filters.firstName}`:'';
+	let lastName = filters.lastName?`&patient_last_nm=${filters.lastName}`:'';
+	let phone = filters.phone?`&patient_home_phone=${filters.phone}`:'';
+	let DOA = filters.DOA?`&patient_date_of_accident_to=${filters.DOA}&patient_date_of_accident_from=${filters.DOA}`:'';
+	let DOB = filters.DOB?`&patient_date_of_birth=${filters.DOB}`:'';
+	let claimNum = filters.claimNum?`&claim_num=${filters.claimNum}`:'';
+	let policyNum = filters.policyNum?`&policy_num=${filters.policyNum}`:'';
+	let claim_type_cd = filters.claim_type_cd?`&claim_type_cd=${filters.claim_type_cd}`:'';
+
 	
-	finalQuery= period+country+city+retailer+shop+category+subcategory+brand+model+user;
+	finalQuery= patientId+firstName+lastName+phone+DOA+DOB+claimNum+policyNum+claim_type_cd;
 	return finalQuery;
+}
 
+export const getAttornies=(token)=> {
+	return {
+		type: "GET_ATTORNIES",
+		promise: axios.get(`${API_URL}attornies?token=${token}`)
+	}
+}
+export const getItems=(token)=> {
+	return {
+		type: "GET_ITEMS_LIST",
+		promise: axios.get(`${API_URL}items?token=${token}`)
+	}
+}
+export const getTechnicianItems=(userId, token)=> {
+	return {
+		type: "GET_TECHNICIAN_ITEMS_LIST",
+		promise: axios.get(`${API_URL}users/${userId}/inventory?token=${token}`)
+	}
+}
+export const getBillStatuses=( token)=> {
+	return {
+		type: "GET_BILL_STATUS_LIST",
+		promise: axios.get(`${API_URL}bill-statuses?token=${token}`)
+	}
+}
+export const getCities=( token)=> {
+	return {
+		type: "GET_CITIES_LIST",
+		promise: axios.get(`${API_URL}cities?token=${token}`)
+	}
+}
+export const getClaimTypes=( token)=> {
+	return {
+		type: "GET_CLAIMS_LIST",
+		promise: axios.get(`${API_URL}claim-types?token=${token}`)
+	}
+}
+export const getDocs=(token)=> {
+	return {
+		type: "GET_DOCS_LIST",
+		promise: axios.get(`${API_URL}document-types?token=${token}`)
+	}
+}
+export const getItemsByPage=(page, token)=> {
+	return {
+		type: "GET_ITEMS_LIST",
+		promise: axios.get(`${API_URL}items?token=${token}&page=${page}`)
+	}
+}
+export const getInsurances=(patient_id, token)=> {
+	return {
+		type: "GET_INSURANCES",
+		promise: axios.get(`${API_URL}patients/${patient_id}/insurances?token=${token}`)
+	}
+}
+export const getPaymentSources=(token)=> {
+	return {
+		type: "GET_PAYMENT_SOURCES",
+		promise: axios.get(`${API_URL}payments/sources?token=${token}`)
+	}
+}
+export const getUsers=(token)=> {
+	return {
+		type: "GET_USERS_LIST",
+		promise: axios.get(`${API_URL}users?token=${token}`)
+	}
+}
+export const getSchedules=(id, token)=> {
+	console.log('getted')
+	return {
+		type: "GET_SCHEDULES_LIST",
+		// promise: axios.get(`${API_URL}deliveries?token=${token}&user_id=${id}`)
+		promise: axios.get(`${API_URL}deliveries?token=${token}`)
+	}
+}
+export const createAttorney=(attorney, token)=> {
+	return {
+		type: "CREATE_ATTORNEY",
+		promise: axios.post(`${API_URL}attornies`,
+			qs.stringify(attorney),
+			{
+		headers:{ 'Authorization': "bearer " + token}
+		})
+	}
+}
+export const updateAttorney=(attorney, token)=> {
+	// let obj = {...attorney, _method:'PUT'}
+	return {
+		type: "UPDATE_ATTORNEY",
+		promise: axios.put(`${API_URL}attornies/${attorney.lw_id}`,
+			qs.stringify(attorney),
+			{
+		headers:{ 'Authorization': "bearer " + token}
+		})
+	}
+}
+export const deleteAttorney=(attorneyId)=> {
+	return {
+		type: "DELETE_ATTORNEY",
+		promise: axios.delete(`${API_URL}attornies/${attorneyId}`,
+			{
+		headers:{ 'Content-Type':'application/x-www-form-urlencoded'}
+		})
+	}
+}
+
+export const selectAttorney=(attorney)=> {
+	return {
+		type: `SELECT_ATTORNEY`,
+		attorney:attorney
+	}
+}
+
+export const selectCurrentTreatment=(treatment)=> {
+	return {
+		type: `SELECT_CURRENT_TREATMENT`,
+		treatment:treatment
+	}
+}
+export const loadCodes=(codes)=> {
+	console.log('codes',codes)
+	return {
+		type:'LOAD_CODES',
+		codes:codes
+	}
+}
+export const deleteService=(services)=> {
+	return {
+		type:'DELETE_SERVICE',
+		services:services
+	}
+}
+export const deleteStatus=(status)=> {
+	return {
+		type:'DELETE_STATUS',
+		status:status
+	}
+}
+
+export const deleteCity=(city)=> {
+	return {
+		type:'DELETE_CITY',
+		city:city
+	}
+}
+export const deleteDoc=(doc)=> {
+	return {
+		type:'DELETE_DOC',
+		doc:doc
+	}
+}
+export const selectProvider=(provider)=> {
+	return {
+		type:'SELECT_PROVIDER',
+		provider:provider
+	}
+}
+export const setItemForEdit=(item)=> {
+	console.log("SETITEM", item)
+	return {
+		type:'SET_ITEM_FOR_EDIT',
+		itemForEdit:item
+	}
+}
+export const setTechItemForEdit=(item)=> {
+	return {
+		type:'SET_TECH_ITEM_FOR_EDIT',
+		itemForEdit:item
+	}
+}
+export const setBilled=(bill)=> {
+	return {
+		type:'SET_BILLED',
+		bill:bill
+	}
+}
+export const selectBill=(bill)=> {
+	return {
+		type:'SELECT_BILL',
+		bill:bill
+	}
+}
+export const selectServiceType=(provider)=> {
+	return {
+		type:'SELECT_SERVICE_TYPE',
+		serviceType:serviceType
+	}
+}
+export const resetDeletedServices=()=> {
+	return {
+		type:'RESET_DELETED_SERVICES',
+	}
+}
+export const createPatient=()=> {
+	return {
+		type:'CREATE_PATIENT',
+	}
+}
+export const openAlert=(msg)=> {
+	return {
+		type:'OPEN_ALERT',
+		msg:msg
+	}
+}
+export const openReportsModal=(modal)=> {
+	return {
+		type:'OPEN_REPORTS_MODAL',
+		modal:modal
+	}
+}
+export const alertToSave=()=> {
+	return {
+		type:'ALERT_TO_SAVE'
+	}
+}
+export const resetAlertToSave=()=> {
+	return {
+		type:'RESET_ALERT_TO_SAVE'
+	}
+}
+export const getPaymentsByProvider=(token, filters, page)=> {
+	let params = '';
+	let bill_statuses = filters.bill_statuses?`&bill_statuses=${JSON.stringify(filters.bill_statuses)}`:'';
+	let providers = filters.providers?`&providers=${JSON.stringify(filters.providers)}`:'';
+	let claim_type_cd = filters.claim_type_cd?`&claim_type_cd=${filters.claim_type_cd}`:'';
+	let doctors = filters.doctors?`&doctors=${JSON.stringify(filters.doctors)}`:'';
+	let billing_date_from = filters.billing_date_from?`&billing_date_from=${filters.billing_date_from}`:'';
+	let billing_date_to = filters.billing_date_to?`&billing_date_to=${filters.billing_date_to}`:'';
+	let rx_date_from = filters.rx_date_from?`&rx_date_from=${filters.rx_date_from}`:'';
+	let rx_date_to = filters.rx_date_to?`&rx_date_to=${filters.rx_date_to}`:'';
+	params = bill_statuses+providers+claim_type_cd+doctors+billing_date_from+billing_date_to+rx_date_from+rx_date_to
 	
-}
-export const downloadCommentsGoogle=(token, id, commentsType, filters)=> {
-	let filterQuery = checkFilters(filters);
+	console.log('params', filters, params)
 	return {
-		type : "DOWNLOAD_COMMENTS",
-		promise: request.get(`${API_URL}comment/${commentsType}/export?uid=${id}&api_token=${token}&google=1`+filterQuery)
+		type: "GET_REPORT",
+		promise: axios.get(`${API_URL}reports/billing/payment-by-provider?token=${token}&page=${page}&${params}`),
+		params:params
 	}
 }
-export const downloadQuestionsGoogle=(token, id, commentsType, filters)=> {
-	let filterQuery = checkFilters(filters);
+export const getBillingByProvider=(token, filters, page)=> {
+	let params = '';
+	let providers = filters.providers?`&providers=${JSON.stringify(filters.providers)}`:'';
+	let claim_type_cd = filters.claim_type_cd?`&claim_type_cd=${filters.claim_type_cd}`:'';
+	let doctors = filters.doctors?`&doctors=${JSON.stringify(filters.doctors)}`:'';
+	let billing_date_from = filters.billing_date_from?`&billing_date_from=${filters.billing_date_from}`:'';
+	let billing_date_to = filters.billing_date_to?`&billing_date_to=${filters.billing_date_to}`:'';
+	let with_balance = filters.with_balance?`&with_balance=${filters.with_balance}`:'';
+	params = providers+claim_type_cd+doctors+billing_date_from+billing_date_to+with_balance
+	
+	console.log('params', filters, params)
 	return {
-		type : "DOWNLOAD_QUESTIONS",
-		promise: request.get(`${API_URL}question/export/${commentsType}?uid=${id}&api_token=${token}&google=1`+filterQuery)
+		type: "GET_REPORT_BILLING_BY_PROVIDER",
+		promise: axios.get(`${API_URL}reports/billing/billing-by-provider?token=${token}&page=${page}&${params}`),
+		params:params
 	}
 }
-export const downloadProductsGoogle=(token, id, filters)=> {
-	let filterQuery = checkFilters(filters);
-	return {
-		type : "DOWNLOAD_PRODUCTS",
-		promise: request.get(`${API_URL}product/export?uid=${id}&api_token=${token}&google=1`+filterQuery)
-	}
-}
-
-
-export const getDolya=(token, id, filters)=> {
-	let filterQuery = checkFilters(filters);
-	console.log("dolya", filters)
-	let isyear = filters.periodType=='days7'||filters.periodType=='days30'||filters.periodType=='period'?'0':'1'
-	return {
-		type : "GET_DOLYA_GRAPHIC",
-		promise: request.get(`${API_URL}stats/share/trend?is_year=${isyear}&uid=${id}&api_token=${token}`+filterQuery),
-		filters:filters
-	}
-}
-export const getDolyaPie=(token, id, filters)=> {
-	let filterQuery = checkFilters(filters);
-	return {
-		type : "GET_DOLYA_PIECHART",
-		promise: request.get(`${API_URL}stats/share/piechart?uid=${id}&api_token=${token}`+filterQuery )
-	}
-}
-export const getDolyaRetailStats=(token, id, filters)=> {
-	let filterQuery = checkFilters(filters);
+export const getArbitrationByProvider=(token, filters, page)=> {
+	let params = '';
+	let provider = filters.provider_id?`&provider_id=${filters.provider_id}`:'';
+	let lawyer = filters.lw_id?`&lw_id=${filters.lw_id}`:'';
+	let doctors = filters.doctors?`&doctors=${JSON.stringify(filters.doctors)}`:'';
+	let attorney_date_from = filters.attorney_date_from?`&attorney_date_from=${filters.attorney_date_from}`:'';
+	let attorney_date_to = filters.attorney_date_to?`&attorney_date_to=${filters.attorney_date_to}`:'';
+	let accident_date_from = filters.accident_date_from?`&accident_date_from=${filters.accident_date_from}`:'';
+	let accident_date_to = filters.accident_date_to?`&accident_date_to=${filters.accident_date_to}`:'';
+	params = provider+lawyer+doctors+accident_date_from+accident_date_to+attorney_date_from+attorney_date_to
 	
 	return {
-		type : "GET_DOLYA_RETAIL_STATS",
-		promise: request.get(`${API_URL}stats/share/retails?uid=${id}&api_token=${token}`+filterQuery )
+		type: "GET_REPORT_ARBITRATION_BY_PROVIDER",
+		promise: axios.get(`${API_URL}reports/billing/arbitration-by-lawyer?token=${token}&page=${page}&${params}`),
+		params:params
 	}
 }
-export const getDolyaCategoryStats=(token, id, filters)=> {
+export const getPaymentRegister=(token, filters, page)=> {
+	let params = '';
+	let bill_statuses = filters.bill_statuses?`&bill_statuses=${JSON.stringify(filters.bill_statuses)}`:'';
+	let visit_types = filters.visit_types?`&visit_types=${JSON.stringify(filters.visit_types)}`:'';
+	let providers = filters.providers?`&providers=${JSON.stringify(filters.providers)}`:'';
+	let claim_type_cd = filters.claim_type_cd?`&claim_type_cd=${filters.claim_type_cd}`:'';
+	let doctors = filters.doctors?`&doctors=${JSON.stringify(filters.doctors)}`:'';
+	let billing_date_from = filters.billing_date_from?`&billing_date_from=${filters.billing_date_from}`:'';
+	let billing_date_to = filters.billing_date_to?`&billing_date_to=${filters.billing_date_to}`:'';
+	let rx_date_from = filters.rx_date_from?`&rx_date_from=${filters.rx_date_from}`:'';
+	let rx_date_to = filters.rx_date_to?`&rx_date_to=${filters.rx_date_to}`:'';
+	let with_balance = filters.with_balance?`&with_balance=${filters.with_balance}`:'';
 
-	let filterQuery = checkFilters(filters);
+	params = bill_statuses+providers+claim_type_cd+doctors+billing_date_from+billing_date_to+rx_date_from+rx_date_to+with_balance
+	
+	console.log('params', filters, params)
 	return {
-		type : "GET_DOLYA_CAT_STATS",
-		promise: request.get(`${API_URL}stats/share/categories?uid=${id}&api_token=${token}`+filterQuery )
+		type: "GET_REPORT_BILLING_BY_PROVIDER",
+		promise: axios.get(`${API_URL}reports/billing/payment-register?token=${token}&page=${page}&${params}`),
+		params:params
 	}
 }
-export const getCommentsSubCat=(token, id, filters, page)=> {
-	let filterQuery = checkFilters(filters);
-	return {
-		type : "GET_COMMENTS_SUBCAT",
-		promise: request.get(`${API_URL}comment/subcategory/all?uid=${id}&api_token=${token}&page=${page}`+filterQuery )
-	}
-}
-export const getCommentsBrand=(token, id, filters, page)=> {
-	let filterQuery = checkFilters(filters);
-	return {
-		type : "GET_COMMENTS_BRAND",
-		promise: request.get(`${API_URL}comment/brand/all?uid=${id}&api_token=${token}&page=${page}`+filterQuery )
-	}
-}
+export const getListOfPatients=(token, filters, page)=> {
+	let params = '';
+	let insurances = filters.insurances?`&insurances=${JSON.stringify(filters.insurances)}`:'';
+	let claim_type_cd = filters.claim_type_cd?`&claim_type_cd=${filters.claim_type_cd}`:'';
+	let doctors = filters.doctors?`&doctors=${JSON.stringify(filters.doctors)}`:'';
+	let accident_date_from = filters.accident_date_from?`&accident_date_from=${filters.accident_date_from}`:'';
+	let accident_date_to = filters.accident_date_to?`&accident_date_to=${filters.accident_date_to}`:'';
+	let patient_status_changed_dt_from = filters.patient_status_changed_dt_from?`&patient_status_changed_dt_from=${filters.patient_status_changed_dt_from}`:'';
+	let patient_status_changed_dt_to = filters.patient_status_changed_dt_to?`&patient_status_changed_dt_to=${filters.patient_status_changed_dt_to}`:'';
+	let patient_status = filters.patient_status?`&patient_status=${filters.patient_status}`:'';
 
-export const getCommentsProduct=(token, id, filters, page)=> {
-	let filterQuery = checkFilters(filters);
+	params = insurances+claim_type_cd+doctors+accident_date_from+accident_date_to+patient_status_changed_dt_from+patient_status_changed_dt_to+patient_status+claim_type_cd
+	
+	console.log('params', filters, params)
 	return {
-		type : "GET_COMMENTS_PRODUCT",
-		promise: request.get(`${API_URL}comment/product/all?uid=${id}&api_token=${token}&page=${page}`+filterQuery )
+		type: "GET_REPORT",
+		promise: axios.get(`${API_URL}patients?token=${token}&page=${page}&${params}`),
+		params:params
 	}
 }
-export const zoomPhoto=(path)=> {
+export const getWithoutPickup=(token, filters, page)=> {
+	let params = '';
+	
+	let codes = filters.codes?`&codes=${JSON.stringify(filters.codes)}`:'';
+	let finish_date_from = filters.finish_date_from?`&finish_date_from=${filters.finish_date_from}`:'';
+	let finish_date_to = filters.finish_date_to?`&finish_date_to=${filters.finish_date_to}`:'';
+	
+	params = codes+finish_date_from+finish_date_to
+	
 	return {
-		type: "ZOOM_PHOTO",
-		path:path
+		type: "GET_REPORT",
+		promise: axios.get(`${API_URL}reports/patient/without-pickup?token=${token}&page=${page}&${params}`),
+		params:params
 	}
 }
-export const getAuditsLineChart=(token, id, filters)=> {
-	let filterQuery = checkFilters(filters);
-	let isyear = filters.periodType=='days7'||filters.periodType=='days30'||filters.periodType=='period'?'0':'1'
+export const getReadyForBilling=(token, filters, page)=> {
+	let params = '';
+	
+	let accident_date_from = filters.accident_date_from?`&accident_date_from=${filters.accident_date_from}`:'';
+	let accident_date_to = filters.accident_date_to?`&accident_date_to=${filters.accident_date_to}`:'';
+	let after_dos = filters.after_dos?`&after_dos=${filters.after_dos}`:'';
+	let claim_type_cd = filters.claim_type_cd?`&claim_type_cd=${filters.claim_type_cd}`:'';
+	let provider_id = filters.provider_id?`&provider_id=${filters.provider_id}`:'';
+	let statuses = filters.patient_statuses?`&statuses=${JSON.stringify(filters.patient_statuses)}`:'';
+	
+	params = statuses+accident_date_from+accident_date_to+after_dos+provider_id
+	
 	return {
-		type : "GET_AUDITS_GRAPHIC",
-		promise: request.get(`${API_URL}stats/audit/trend?is_year=${isyear}&uid=${id}&api_token=${token}`+filterQuery),
-		filters:filters
+		type: "GET_REPORT",
+		promise: axios.get(`${API_URL}reports/patient/ready-for-billing?token=${token}&page=${page}&${params}`),
+		params:params
 	}
 }
-export const getAuditsRetailStats=(token, id, filters)=> {
-	let filterQuery = checkFilters(filters);
+export const getActivePatientIns=(token, filters, page)=> {
+	let params = '';
+	
+	let after_doa = filters.after_doa?`&after_doa=${filters.after_doa}`:'';
+	
+	params = after_doa
+	
 	return {
-		type : "GET_AUDITS_RETAIL_STATS",
-		promise: request.get(`${API_URL}stats/audit/retails?uid=${id}&api_token=${token}`+filterQuery)
+		type: "GET_REPORT",
+		promise: axios.get(`${API_URL}reports/patient/without-insurance?token=${token}&page=${page}&${params}`),
+		params:params
 	}
 }
-export const getAuditsUserStats=(token, id, filters)=> {
-	let filterQuery = checkFilters(filters);
-	return {
-		type : "GET_AUDITS_USER_STATS",
-		promise: request.get(`${API_URL}stats/audit/users?uid=${id}&api_token=${token}`+filterQuery)
-	}
-}
-export const getAllStats=(token, id, filters)=> {
-	let filterQuery = checkFilters(filters);
-	return {
-		type : "GET_ALL_STATS",
-		promise: request.get(`${API_URL}stats/summary?uid=${id}&api_token=${token}`+filterQuery)
-	}
-}
-export const getPricesLineChart=(token, id, filters)=> {
-	let filterQuery = checkFilters(filters);
-	let isyear = filters.periodType=='days7'||filters.periodType=='days30'||filters.periodType=='period'?'0':'1'
-	return {
-		type : "GET_PRICES_GRAPHIC",
-		promise: request.get(`${API_URL}stats/price/trend?is_year=${isyear}&uid=${id}&api_token=${token}`+filterQuery),
-		filters:filters
-	}
-}
-export const getPricesRetailStats=(token, id, filters)=> {
-	let filterQuery = checkFilters(filters);
-	return {
-		type : "GET_PRICES_RETAIL_STATS",
-		promise: request.get(`${API_URL}stats/price/retails?uid=${id}&api_token=${token}`+filterQuery)
-	}
-}
-export const getPricesCategoryStats=(token, id, filters)=> {
-	let filterQuery = checkFilters(filters);
-	return {
-		type : "GET_PRICES_CATEGORY_STATS",
-		promise: request.get(`${API_URL}stats/price/categories?uid=${id}&api_token=${token}`+filterQuery)
-	}
-}
-export const getPricesProductStats=(token, id, filters, page)=> {
-	let filterQuery = checkFilters(filters);
-	return {
-		type : "GET_PRICES_PRODUCT_STATS",
-		promise: request.get(`${API_URL}stats/price/products?uid=${id}&api_token=${token}&page=${page}`+filterQuery)
-	}
-}
-// amount
-export const getAmountLineChart=(token, id, filters)=> {
-	let filterQuery = checkFilters(filters);
-	let isyear = filters.periodType=='days7'||filters.periodType=='days30'||filters.periodType=='period'?'0':'1'
-	return {
-		type : "GET_AMOUNT_GRAPHIC",
-		promise: request.get(`${API_URL}stats/amount/trend?is_year=${isyear}&uid=${id}&api_token=${token}`+filterQuery),
-		filters:filters
-	}
-}
-export const getAmountRetailStats=(token, id, filters)=> {
-	let filterQuery = checkFilters(filters);
-	return {
-		type : "GET_AMOUNT_RETAIL_STATS",
-		promise: request.get(`${API_URL}stats/amount/retails?uid=${id}&api_token=${token}`+filterQuery)
-	}
-}
-export const getAmountCategoryStats=(token, id, filters)=> {
-	let filterQuery = checkFilters(filters);
-	return {
-		type : "GET_AMOUNT_CATEGORY_STATS",
-		promise: request.get(`${API_URL}stats/amount/categories?uid=${id}&api_token=${token}`+filterQuery)
-	}
-}
-export const getAmountProductStats=(token, id, filters, page)=> {
-	let filterQuery = checkFilters(filters);
-	return {
-		type : "GET_AMOUNT_PRODUCT_STATS",
-		promise: request.get(`${API_URL}stats/amount/products?uid=${id}&api_token=${token}&page=${page}`+filterQuery)
-	}
-}
-export const getQuestionStats=(token, id, filters, qid)=> {
-	console.log("FILT", filters)
-	let filterQuery = checkFilters(filters);
-	return {
-		type : "GET_QUESTION_STATS",
-		promise: request.get(`${API_URL}question/info/${qid}?uid=${id}&api_token=${token}`+filterQuery)
-	}
-}
-export const searchComments=(token, id, filters, page, search, sType)=> {
-	let filterQuery = checkFilters(filters);
-	return {
-		type : `SEARCH_COMMENTS_${sType.toUpperCase()}`,
-		promise: request.get(`${API_URL}comment/${sType}/search?uid=${id}&api_token=${token}&page=${page}&search=${search}`+filterQuery)
-	}
-}
-export const setQuestion=(question)=> {
-	return {
-		type:'SET_QUESTION',
-		question:question
-	}
-}
+export const getPatientBillingHistory=(token, patientId, page)=> {
 
-export const getAuditHistory=(token, id, filters, page)=> {
-	let filterQuery = checkFilters(filters);
 	return {
-		type : `GET_AUDIT_HISTORY`,
-		promise: request.get(`${API_URL}audit/history?uid=${id}&api_token=${token}&page=${page}`+filterQuery)
+		type: "GET_REPORT",
+		promise: axios.get(`${API_URL}reports/billing/patient-billing-history?patient_id=${patientId}&token=${token}&page=${page}`),
+		params:''
 	}
 }

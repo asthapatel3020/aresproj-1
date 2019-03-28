@@ -1,68 +1,66 @@
 
 import { routerStateReducer } from 'redux-react-router';
-import { combineReducers } from 'redux';
-
-// Outlet reducers
-
-import ReduxOutlet from '../outlets/ReduxOutlet';
-import LocalReduxOutlet from '../outlets/LocalReduxOutlet';
-
-// custom reducers
-
+// import { combineReducers } from 'redux';
 import app from './app';
-import countries from './reducers/countries';
-import country from './reducers/country';
-import loading from './reducers/loading';
-import cities from './reducers/cities';
-import city from './reducers/city';
-import users from './reducers/users';
-import retailers from './reducers/retailers';
-import retailer from './reducers/retailer';
-import matrix from './reducers/matrix';
-import shops from './reducers/shops';
-import categories from './reducers/categories';
-import shop from './reducers/shop';
-import questions from './reducers/questions';
-import question from './reducers/question';
-import brands from './reducers/brands';
-import questionsOther from './reducers/questionsOther';
-import user from './reducers/user';
-import questionOther from './reducers/questionOther';
-import filters from './reducers/filters';
-import appliedFilters from './reducers/appliedFilters';
-import reports from './reducers/reports';
-import comments from './reducers/comments';
-import modal from './reducers/modal';
-import downloadMatrix from './reducers/downloadMatrix';
-import questionStats from './reducers/questionStats';
+import loading from './reducers/loading'
+import patients from './reducers/patients'
+import patient from './reducers/patient'
+import services from './reducers/services'
+import treatingProviders from './reducers/treatingProviders'
+import treatments from './reducers/treatments'
+import filters from './reducers/filters'
+import codes from './reducers/codes'
+import billing from './reducers/billing'
+import attorney from './reducers/attorney'
+import payments from './reducers/payments'
+import insCompanies from './reducers/insCompanies'
+import offices from './reducers/offices'
+import alert from './reducers/alert'
+import specialties from './reducers/specialties'
+import items from './reducers/items'
+import users from './reducers/users'
+import schedules from './reducers/schedules'
+import notes from './reducers/notes'
+import paymentsCollections from './reducers/paymentsCollections'
+import billStatuses from './reducers/billStatuses'
+import city from './reducers/city'
+import documents from './reducers/documents'
+import claimTypes from './reducers/claimTypes'
+import company from './reducers/company'
+import insurances from './reducers/insurances'
+import suppliers from './reducers/suppliers'
+import reports from './reducers/reports'
 
 export default {
 	router: routerStateReducer,
 	app,
-	user,
-	countries,
-	country,
 	loading,
-	cities,
-	city,
-	users,
-	retailers,
-	retailer,
-	matrix,
-	shops,
-	categories,
-	shop,
-	questions,
-	question,
-	brands,
-	questionsOther,
-	user,
-	questionOther,
+	patients,
+	patient,
+	services,
+	treatingProviders,
+	treatments,
 	filters,
-	appliedFilters,
-	reports,
-	comments,
-	modal,
-	downloadMatrix,
-	questionStats
+	codes,
+	billing,
+	attorney,
+	payments,
+	insCompanies,
+	offices,
+	alert,
+	specialties,
+	items,
+	users,
+	schedules,
+	notes,
+	paymentsCollections,
+	billStatuses,
+	city,
+	documents,
+	claimTypes,
+	company,
+	insurances,
+	suppliers,
+	reports
+
 }

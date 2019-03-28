@@ -1,19 +1,4 @@
-/**
- * Copyright 2015-present, Lights in the Sky (3273741 NS Ltd.)
- * All rights reserved.
- *
- * This source code is licensed under the license found in the
- * LICENSE file in the root directory of this source tree. 
- * 
- * @providesModule Input
- */
-
 import React, { Component } from "react";
-import PropTypes from "prop-types";
-
-/**
- * Input component that supports format validation, icons and error messages
- */
 
 class Input extends Component {
   constructor(props) {
@@ -26,8 +11,7 @@ class Input extends Component {
 
   handleChange(e) {
     // validate based on format
-
-    this.validate(e);
+    !this.state.valid&&this.validate(e)
     if (this.props.onFieldChange) {
       this.props.onFieldChange(e);
     }
@@ -36,7 +20,9 @@ class Input extends Component {
   isValid() {
     return this.state.valid;
   }
-
+  handleBlur(e) {
+    this.validate(e);
+  }
   validate(e) {
     let val = e.currentTarget.value;
     if (this.props.required) {
@@ -55,6 +41,7 @@ class Input extends Component {
     return true;
   }
 
+  
   validateFormat(format, val) {
     switch (format) {
       case "email":
@@ -67,6 +54,8 @@ class Input extends Component {
         return validations.isLogin(val, val)
       case "password":
         return validations.isPassword(val, val)
+      case "phone":
+        return validations.isNumeric("", val)&&validations.isLength("", val, 11)
       default:
         return true;
     }
@@ -76,19 +65,23 @@ class Input extends Component {
     // console.log("input")
     let icon = this.props.icon ? <i className={this.props.icon} /> : null;
     let format = this.props.format;
-    let error = this.state.valid ? null : <p className="help-block text-left" style={{color:'red'}}>{this.state.errorMessage}</p>;
+    let error = this.state.valid ? null : <div className="help-block text-left" style={{color:'red'}}>{this.state.errorMessage}</div>;
     // let myError = this.props.isLogin
-    let { errorMessage, onFieldChange, classes, rounded, isFull, isValid, ...rest } = this.props;
+    let { errorMessage, onFieldChange, classes, rounded, isFull, isValid, title, type, ...rest } = this.props;
     // console.log("isvalid", isValid)
     return (
-      <div className={`${classes}`} style={{width:!isFull?'100%':'100%'}}>
-        <div className={`${this.props.icon ? "iconic-input" : ""}`}>
+      <div className={`${classes}`} style={{width:'100%'}}>
+        <div style={{color:'#565656', marginBottom:8}}>{title}</div>
+        <div style={{width:'100%'}} className={`${this.props.icon ? "iconic-input" : ""}`}>
           {icon}
           <input
             // type={format}
             autoComplete="off"
-            className={`form-control ${rounded ? "rounded" : ""} col-lg-9 ${!this.state.valid?'invalid-input':''}`}
+            className={`form-control ${rounded ? "rounded" : ""}${!this.state.valid?'invalid-input':''}`}
             onChange={e => this.handleChange(e)}
+            onBlur={e=>this.handleBlur(e)}
+            style={{width:'100%'}}
+            type={type?type:'text'}
             {...rest}
           />
           {error}
@@ -195,19 +188,7 @@ var validations = {
   }
 };
 
-Input.propTypes = {
-  icon: PropTypes.string,
-  format: PropTypes.string,
-  errorMessage: PropTypes.string,
-  onFieldChange: PropTypes.func,
-  required: PropTypes.bool,
-  classes: PropTypes.string,
-  rounded: PropTypes.bool,
-  // isValid: PropTypes.bool
-};
 
-Input.defaultProps = {
-  rounded: false
-};
+
 
 export default Input;

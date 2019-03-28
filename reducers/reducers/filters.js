@@ -1,52 +1,48 @@
 const initialState = {
-		from:'', 
-		to:'', 
-		countryId:'',
-		cityId:'',
-		retailerId:'',
-		shopId:'',
-		catId:'',
-		subCatId:'',
-		userId:'',
-		brandId:'',
-		periodType:'',
-		modelId:''
-	}
-const checkFilter=(filter, type, state)=> {
-	return true
+	firstName:'',
+	lastName:'',
+	DOB:'',
+	DOA:'',
+	phone:'',
+	patientId:'',
+	DOBValue:'',
+	DOAValue:'',
+	claimNum:'',
+	policyNum:'',
+	claim_type_cd:'',
+	insurance:''
+};
+
+const convertDate=(e)=> {
+	let date = new Date(e)
+	return date/1000
+	
 }
-export default function app(state = initialState, action) {
-	switch (action.type) {
-		case "ADD_FILTER":
-			switch(action.filterType) {
-				case "period":
+export default function loading(state = initialState, action) {
+	switch(action.type) {
+		case 'SET_FILTER_FIRSTNAME':
+			return {...state, firstName:action.item}
+		case 'SET_FILTER_LASTNAME':
+			return {...state, lastName:action.item}
+		case 'SET_FILTER_CLAIM_TYPE_CD':
+			return {...state, claim_type_cd:action.item}
+		case 'SET_FILTER_INSURANCE':
+			return {...state, insurance:action.item}
+		case 'SET_FILTER_CLAIMNUM':
+			return {...state, claimNum:action.item}
+		case 'SET_FILTER_POLICYNUM':
+			return {...state, policyNum:action.item}
+		case 'SET_FILTER_DOB':
+			return {...state, DOB:convertDate(action.item), DOBValue:action.item}
+		case 'SET_FILTER_DOA':
+			return {...state, DOA:convertDate(action.item),DOAValue:action.item}
+		case 'SET_FILTER_PHONE':
+			return {...state, phone:action.item}
+		case 'SET_FILTER_PATIENTID':
+			return {...state, patientId:action.item}
+		
 
-					return {...state, to:action.filter.to, from:action.filter.from, periodType:action.periodType}
-				case "country":
-					return {...state, countryId:action.filter}
-				case "city":
-					return {...state, cityId:action.filter}
-				case "retailer":
-					return {...state, retailerId:action.filter}
-				case "shop":
-					return {...state, shopId:action.filter}
-				case "category":
-					return {...state, catId:action.filter}
-				case "subcategory":
-					return {...state, subCatId:action.filter}
-				case "user":
-					return {...state, userId:action.filter}
-				case "brand":
-					return {...state, brandId:action.filter}
-				case "model":
-					return {...state, modelId:action.filter}
-				default:
-					return state
-			}
-		case "ADD_FILTER_FULFILLED":
-			return initialState;
-
-	default:
-    	return state;
+		default:
+			return state
 	}
 }

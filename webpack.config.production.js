@@ -35,7 +35,11 @@ module.exports = {
         loaders: [
           'style', 'css',
         ],
-     }
+    },
+    {
+      test: /\.(png|woff|woff2|eot|ttf|svg|gif)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+      loaders: ['url']
+    }
     ]
   },
   node: {

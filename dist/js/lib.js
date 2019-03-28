@@ -1016,7 +1016,7 @@ if (typeof jQuery === "undefined") { throw new Error("Bootstrap requires jQuery"
       $.support.transition && this.$element.hasClass('fade')?
         this.$backdrop
           .one($.support.transition.end, callback)
-          .emulateTransitionEnd(150) :
+          .emulateTransitionEnd(0) :
         callback()
 
     } else if (callback) {
