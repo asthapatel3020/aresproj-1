@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
 import classNames from 'classnames';
 
-import { withStyles } from 'material-ui/styles';
-import Table from 'material-ui/Table';
-import TableBody from 'material-ui/Table/TableBody';
-import TableCell from 'material-ui/Table/TableCell';
-import TableHead from 'material-ui/Table/TableHead';
-import TableRow from 'material-ui/Table/TableRow';
-import Paper from 'material-ui/Paper';
+import { withStyles } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
 import * as utils from '../../../../components/functions/functions'
 import { arrayPush, arrayRemove, FieldArray, reduxForm  } from 'redux-form';
 import * as rdField from '../../../../components/form/renderField'

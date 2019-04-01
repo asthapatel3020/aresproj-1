@@ -6,11 +6,11 @@ import AsyncSelect from 'react-select/lib/Async'
 import 'react-select/dist/react-select.css';
 import { Field, formValueSelector} from 'redux-form'
 import Dropzone from 'react-dropzone'
-import TableRow from 'material-ui/Table/TableRow';
-import TableBody from 'material-ui/Table/TableBody';
-import TableCell from 'material-ui/Table/TableCell';
+import TableRow from '@material-ui/core/TableRow';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
 import * as utils from '../../components/functions/functions'
-import Checkbox from 'material-ui/Checkbox';
+import Checkbox from '@material-ui/core/Checkbox';
 import { createTextMask} from 'redux-form-input-masks';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css'; 

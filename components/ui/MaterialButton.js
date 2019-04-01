@@ -1,10 +1,10 @@
 import React from 'react';
-import Button from 'material-ui/Button';
-import { withStyles } from 'material-ui/styles';
+import Button from '@material-ui/core/Button';
+import { withStyles } from '@material-ui/core/styles';
 import DeleteIcon from 'material-ui-icons/Delete';
 import CloudUploadIcon from 'material-ui-icons/CloudUpload';
 import KeyboardVoiceICon from 'material-ui-icons/KeyboardVoice';
-import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import SaveIcon from 'material-ui-icons/Save';
 import AddIcon from 'material-ui-icons/Add';
 import CloseIcon from 'material-ui-icons/Close';

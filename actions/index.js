@@ -1,10 +1,9 @@
 import axios from 'axios';
 import qs from 'qs'
-// export const API_URL = 'http://iqlabs.kz/whirlpool/public/';
-// const API_URL = 'https://api.whirlpool-kz.net/';
+
 export const API_URL = 'https://gg.com';
 
-let config = { headers:{'Authorization': "bearer " + token}}
+//let config = { headers:{'Authorization': "bearer " + token}}
 export const choosePatient=(patient, token)=> {
 	return {
 		type: "CHOOSE_PATIENT",
@@ -12,6 +11,7 @@ export const choosePatient=(patient, token)=> {
 		promise: axios.get(`${API_URL}patients?patient_id=${patient}&token=${token}`)
 	}
 }
+
 export const getCompanies=(token)=> {
 	return {
 		type: "GET_INS_COMPANIES",
