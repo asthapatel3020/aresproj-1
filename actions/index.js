@@ -11,7 +11,6 @@ export const choosePatient=(patient, token)=> {
 		promise: axios.get(`${API_URL}patients?patient_id=${patient}&token=${token}`)
 	}
 }
-
 export const getCompanies=(token)=> {
 	return {
 		type: "GET_INS_COMPANIES",
